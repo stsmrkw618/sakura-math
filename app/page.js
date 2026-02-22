@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import SakuraTree from '../components/SakuraTree';
 import PetalFall from '../components/PetalFall';
-import { loadProgress, saveProgress } from '../lib/storage';
+import { loadProgress, saveProgress, syncFromSupabase } from '../lib/storage';
 import { getAllProblems } from '../lib/problems';
 import { getDueProblems, calculateNextReview } from '../lib/spaced-repetition';
 import { getAllFlashcards } from '../lib/flashcards';
@@ -44,6 +44,20 @@ export default function Home() {
     setFlashcardMastered(getMasteredCount(p.flashcards?.boxes || {}));
 
     setLoading(false);
+
+    // バックグラウンドでSupabaseと同期
+    syncFromSupabase().then((merged) => {
+      if (!merged) return;
+      setProgress(merged);
+      const allProblems = getAllProblems();
+      const r1 = getDueProblems(allProblems, merged.reviews, { mode: 'normal' });
+      setDueCount(r1.problems.length);
+      setDueIsDue(r1.isDue);
+      const r2 = getDueProblems(allProblems, merged.reviews, { mode: 'highlevel' });
+      setDueCountHL(r2.problems.length);
+      setDueHLIsDue(r2.isDue);
+      setFlashcardMastered(getMasteredCount(merged.flashcards?.boxes || {}));
+    });
   }, []);
 
   // Admin: Import review results
