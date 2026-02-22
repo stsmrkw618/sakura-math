@@ -89,10 +89,10 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <Link href="/" className="text-gray-400 text-sm">
-          ← もどる
+          ← 戻る
         </Link>
         <h1 className="text-lg font-bold text-gray-700 font-kiwi">
-          📊 にがてチェック
+          📊 苦手チェック
         </h1>
         <div className="w-12" />
       </div>
@@ -102,24 +102,24 @@ export default function DashboardPage() {
         <div className="grid grid-cols-3 text-center divide-x divide-gray-100">
           <div>
             <p className="text-2xl font-bold text-sakura-500 font-kiwi">{summary.total}</p>
-            <p className="text-xs text-gray-500">とうろく数</p>
+            <p className="text-xs text-gray-500">登録数</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-600 font-kiwi">{summary.totalAnswers}</p>
-            <p className="text-xs text-gray-500">かいとう数</p>
+            <p className="text-xs text-gray-500">回答数</p>
           </div>
           <div>
             <p className={`text-2xl font-bold font-kiwi ${getCorrectRateColor(summary.overallRate)}`}>
               {summary.overallRate}%
             </p>
-            <p className="text-xs text-gray-500">せいとう率</p>
+            <p className="text-xs text-gray-500">正答率</p>
           </div>
         </div>
       </div>
 
       {/* Tag Chart */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm mb-4">
-        <p className="text-sm font-bold text-gray-600 mb-3">ぶんや別せいとう率</p>
+        <p className="text-sm font-bold text-gray-600 mb-3">分野別正答率</p>
         {tagStats.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-4">
             まだデータがありません
@@ -159,7 +159,7 @@ export default function DashboardPage() {
         </p>
         {weakPoints.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-4">
-            にがてな分野はまだありません
+            苦手な分野はまだありません
           </p>
         ) : (
           <div className="space-y-3">

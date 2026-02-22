@@ -70,14 +70,14 @@ export default function DrillPage() {
         <div className="text-center py-16">
           <p className="text-5xl mb-4">🎉</p>
           <p className="text-xl font-bold text-gray-700 font-kiwi mb-2">
-            きょうの復習はおわり！
+            今日の復習は終わり！
           </p>
           <p className="text-sm text-gray-500">
-            またあした、がんばろうね
+            また明日、頑張ろうね
           </p>
           <Link href="/">
             <button className="mt-6 px-8 py-3 bg-sakura-400 text-white rounded-2xl font-bold shadow-lg shadow-sakura-200">
-              もどる
+              戻る
             </button>
           </Link>
         </div>
@@ -106,7 +106,7 @@ export default function DrillPage() {
             {correctCount === results.length ? '🌟' : correctCount > 0 ? '🌸' : '💪'}
           </p>
           <h2 className="text-xl font-bold text-gray-700 font-kiwi">
-            おつかれさま！
+            お疲れさま！
           </h2>
         </div>
 
@@ -115,11 +115,11 @@ export default function DrillPage() {
           <div className="grid grid-cols-3 text-center divide-x divide-gray-100">
             <div>
               <p className="text-2xl font-bold text-sakura-500 font-kiwi">{results.length}</p>
-              <p className="text-xs text-gray-500">もんだい</p>
+              <p className="text-xs text-gray-500">問題</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-emerald-500 font-kiwi">{correctCount}</p>
-              <p className="text-xs text-gray-500">せいかい</p>
+              <p className="text-xs text-gray-500">正解</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-warm-orange font-kiwi">{newBlooms}</p>
@@ -130,7 +130,7 @@ export default function DrillPage() {
 
         {/* Tag breakdown */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-100 shadow-sm mb-4">
-          <p className="text-sm font-bold text-gray-600 mb-3">ぶんや別せいせき</p>
+          <p className="text-sm font-bold text-gray-600 mb-3">分野別成績</p>
           <div className="space-y-2">
             {Object.entries(tagResults).map(([tag, data]) => (
               <div key={tag} className="flex items-center justify-between">
@@ -148,7 +148,7 @@ export default function DrillPage() {
 
         {/* Individual results */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-100 shadow-sm mb-6">
-          <p className="text-sm font-bold text-gray-600 mb-3">かくもんだい</p>
+          <p className="text-sm font-bold text-gray-600 mb-3">各問題</p>
           <div className="space-y-2">
             {results.map(({ problem, quality }, i) => (
               <div key={i} className="flex items-start gap-2">
@@ -165,7 +165,7 @@ export default function DrillPage() {
 
         <Link href="/">
           <button className="w-full py-3.5 bg-gradient-to-r from-sakura-400 to-sakura-500 text-white rounded-2xl font-bold shadow-lg shadow-sakura-200">
-            ホームにもどる 🌸
+            ホームに戻る 🌸
           </button>
         </Link>
       </main>
@@ -179,7 +179,7 @@ export default function DrillPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <Link href="/" className="text-gray-400 text-sm">
-          ← もどる
+          ← 戻る
         </Link>
         <span className="text-sm text-gray-500 font-medium">
           {currentIndex + 1} / {problems.length}

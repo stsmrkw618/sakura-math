@@ -58,10 +58,10 @@ export default function ProblemsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <Link href="/" className="text-gray-400 text-sm">
-          ← もどる
+          ← 戻る
         </Link>
         <h1 className="text-lg font-bold text-gray-700 font-kiwi">
-          📋 もんだい一覧
+          📋 問題一覧
         </h1>
         <div className="w-12" />
       </div>
@@ -99,7 +99,7 @@ export default function ProblemsPage() {
 
       {/* Problem count */}
       <p className="text-xs text-gray-400 mb-3">
-        {filtered.length}もん表示中
+        {filtered.length}問 表示中
       </p>
 
       {/* Problem List */}
@@ -167,7 +167,7 @@ export default function ProblemsPage() {
 
                   {/* Answer */}
                   <div className="bg-emerald-50 rounded-xl p-3 mb-3">
-                    <p className="text-xs font-bold text-emerald-700 mb-1">こたえ</p>
+                    <p className="text-xs font-bold text-emerald-700 mb-1">答え</p>
                     <p className="text-sm text-gray-700 whitespace-pre-line">
                       {problem.answer}
                     </p>
@@ -189,7 +189,7 @@ export default function ProblemsPage() {
                   {history.length > 0 && (
                     <div className="bg-gray-50 rounded-xl p-3">
                       <p className="text-xs font-bold text-gray-500 mb-2">
-                        復習りれき ({history.length}回)
+                        復習履歴 ({history.length}回)
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {history.map((entry, i) => (
@@ -203,7 +203,7 @@ export default function ProblemsPage() {
                         ))}
                       </div>
                       <p className="text-xs text-gray-400 mt-2">
-                        さいごの復習: {new Date(history[history.length - 1].date).toLocaleDateString('ja-JP')}
+                        最後の復習: {new Date(history[history.length - 1].date).toLocaleDateString('ja-JP')}
                       </p>
                     </div>
                   )}

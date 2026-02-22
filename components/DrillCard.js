@@ -41,13 +41,13 @@ export default function DrillCard({ problem, onEvaluate }) {
           onClick={() => setShowAnswer(true)}
           className="w-full mt-4 py-3.5 bg-white/80 backdrop-blur-sm border-2 border-dashed border-sakura-200 rounded-2xl text-sakura-500 font-bold text-base active:scale-[0.98] transition-transform"
         >
-          こたえを見る 👀
+          答えを見る 👀
         </button>
       ) : (
         <div className="mt-4 animate-slide-up">
           {/* Answer */}
           <div className="bg-gradient-to-br from-sakura-50 to-white rounded-2xl p-5 border border-sakura-100 shadow-sm">
-            <p className="text-sm font-bold text-sakura-500 mb-2">こたえ</p>
+            <p className="text-sm font-bold text-sakura-500 mb-2">答え</p>
             <p className="text-base leading-relaxed text-gray-700 whitespace-pre-wrap">
               {problem.answer}
             </p>

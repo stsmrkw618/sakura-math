@@ -148,7 +148,7 @@ export default function Home() {
         <p className="text-sm text-gray-500 mt-1">さくら算数ドリル</p>
         {sakura.fullBloomCount > 0 && (
           <p className="text-xs text-sakura-300 mt-0.5">
-            {treeGeneration}ほんめのさくら
+            {treeGeneration}本目のさくら
           </p>
         )}
         {/* Admin button */}
@@ -174,11 +174,11 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-lg font-bold text-gray-700 font-kiwi">
-                きょうの復習: <span className="text-sakura-500">{dueCount}</span>もん
+                今日の復習: <span className="text-sakura-500">{dueCount}</span>問
               </p>
               {streak.currentStreak > 0 && (
                 <p className="text-sm text-warm-orange mt-1">
-                  れんぞく{streak.currentStreak}日がんばってるよ！🔥
+                  連続{streak.currentStreak}日がんばってるよ！🔥
                 </p>
               )}
             </div>
@@ -192,10 +192,10 @@ export default function Home() {
             <div>
               <p className="text-sm text-gray-500">さくらの花</p>
               <p className="text-lg font-bold text-sakura-500 font-kiwi">
-                {sakura.currentTreeBlooms}こ / {threshold}こ
+                {sakura.currentTreeBlooms}個 / {threshold}個
               </p>
               <p className="text-xs text-gray-400 mt-0.5">
-                まんかいまであと{remaining}こ！
+                満開まであと{remaining}個！
               </p>
             </div>
             <div className="text-3xl">🌸</div>
@@ -218,9 +218,9 @@ export default function Home() {
             disabled={dueCount === 0}
           >
             {dueCount > 0 ? (
-              <>ドリルをはじめる 🌸</>
+              <>ドリルを始める 🌸</>
             ) : (
-              <>きょうの復習はおわり！🎉</>
+              <>今日の復習は終わり！🎉</>
             )}
           </button>
         </Link>
@@ -228,12 +228,12 @@ export default function Home() {
         <div className="grid grid-cols-2 gap-3">
           <Link href="/dashboard" className="block">
             <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
-              📊 にがてチェック
+              📊 苦手チェック
             </button>
           </Link>
           <Link href="/problems" className="block">
             <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
-              📋 もんだい一覧
+              📋 問題一覧
             </button>
           </Link>
         </div>
@@ -242,11 +242,11 @@ export default function Home() {
       {/* Total stats footer */}
       <div className="mt-6 text-center text-xs text-gray-400">
         <p>
-          そうさくら数: {sakura.totalBlooms}こ
-          {sakura.fullBloomCount > 0 && ` ・ まんかい${sakura.fullBloomCount}回`}
+          総さくら数: {sakura.totalBlooms}個
+          {sakura.fullBloomCount > 0 && ` ・ 満開${sakura.fullBloomCount}回`}
         </p>
         {streak.longestStreak > 0 && (
-          <p className="mt-0.5">さいこうきろく: {streak.longestStreak}日れんぞく</p>
+          <p className="mt-0.5">最高記録: {streak.longestStreak}日連続</p>
         )}
       </div>
 
