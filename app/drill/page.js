@@ -16,11 +16,17 @@ export default function DrillPage() {
   const [done, setDone] = useState(false);
   const [newBlooms, setNewBlooms] = useState(0);
   const [showBloomAnimation, setShowBloomAnimation] = useState(false);
+  const [mode, setMode] = useState('normal');
 
   useEffect(() => {
+    // Read mode from URL (static export can't use useSearchParams)
+    const params = new URLSearchParams(window.location.search);
+    const m = params.get('mode') === 'highlevel' ? 'highlevel' : 'normal';
+    setMode(m);
+
     const progress = loadProgress();
     const allProblems = getAllProblems();
-    const due = getDueProblems(allProblems, progress.reviews);
+    const due = getDueProblems(allProblems, progress.reviews, { mode: m });
     setProblems(due);
     setLoading(false);
   }, []);
@@ -181,9 +187,16 @@ export default function DrillPage() {
         <Link href="/" className="text-gray-400 text-sm">
           ← 戻る
         </Link>
-        <span className="text-sm text-gray-500 font-medium">
-          {currentIndex + 1} / {problems.length}
-        </span>
+        <div className="flex items-center gap-2">
+          {mode === 'highlevel' && (
+            <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200">
+              ハイレベル🔥
+            </span>
+          )}
+          <span className="text-sm text-gray-500 font-medium">
+            {currentIndex + 1} / {problems.length}
+          </span>
+        </div>
       </div>
 
       {/* Progress */}

@@ -12,6 +12,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(null);
   const [dueCount, setDueCount] = useState(0);
+  const [dueCountHL, setDueCountHL] = useState(0);
   const [showFullBloom, setShowFullBloom] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -25,8 +26,10 @@ export default function Home() {
     setProgress(p);
 
     const problems = getAllProblems();
-    const due = getDueProblems(problems, p.reviews);
+    const due = getDueProblems(problems, p.reviews, { mode: 'normal' });
     setDueCount(due.length);
+    const dueHL = getDueProblems(problems, p.reviews, { mode: 'highlevel' });
+    setDueCountHL(dueHL.length);
 
     // Check admin mode from URL
     const params = new URLSearchParams(window.location.search);
@@ -77,10 +80,10 @@ export default function Home() {
       setImportStatus({ type: 'success', message: `${Object.keys(data).length}件インポートしました` });
       setImportJson('');
 
-      // Refresh due count
+      // Refresh due counts
       const problems = getAllProblems();
-      const due = getDueProblems(problems, currentProgress.reviews);
-      setDueCount(due.length);
+      setDueCount(getDueProblems(problems, currentProgress.reviews, { mode: 'normal' }).length);
+      setDueCountHL(getDueProblems(problems, currentProgress.reviews, { mode: 'highlevel' }).length);
     } catch (e) {
       setImportStatus({ type: 'error', message: `エラー: ${e.message}` });
     }
@@ -102,7 +105,9 @@ export default function Home() {
     };
     saveProgress(defaultProgress);
     setProgress(defaultProgress);
-    setDueCount(getAllProblems().length);
+    const allProblems = getAllProblems();
+    setDueCount(getDueProblems(allProblems, {}, { mode: 'normal' }).length);
+    setDueCountHL(getDueProblems(allProblems, {}, { mode: 'highlevel' }).length);
     setImportStatus({ type: 'success', message: 'リセットしました' });
   };
 
@@ -174,7 +179,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-lg font-bold text-gray-700 font-kiwi">
-                今日の復習: <span className="text-sakura-500">{dueCount}</span>問
+                今日の復習: <span className="text-sakura-500">{dueCount + dueCountHL}</span>問
               </p>
               {streak.currentStreak > 0 && (
                 <p className="text-sm text-warm-orange mt-1">
@@ -218,9 +223,22 @@ export default function Home() {
             disabled={dueCount === 0}
           >
             {dueCount > 0 ? (
-              <>ドリルを始める 🌸</>
+              <>ドリルを始める ({dueCount}問) 🌸</>
             ) : (
               <>今日の復習は終わり！🎉</>
+            )}
+          </button>
+        </Link>
+
+        <Link href="/drill?mode=highlevel" className="block">
+          <button
+            className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi disabled:opacity-40"
+            disabled={dueCountHL === 0}
+          >
+            {dueCountHL > 0 ? (
+              <>ハイレベル ({dueCountHL}問) 🔥</>
+            ) : (
+              <>ハイレベル問題なし</>
             )}
           </button>
         </Link>
