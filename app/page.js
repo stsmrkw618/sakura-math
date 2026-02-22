@@ -20,6 +20,7 @@ export default function Home() {
   const [flashcardMastered, setFlashcardMastered] = useState(0);
   const [flashcardLearned, setFlashcardLearned] = useState(0);
   const [flashcardTotal, setFlashcardTotal] = useState(0);
+  const [todayDrillCount, setTodayDrillCount] = useState(0);
   const [showFullBloom, setShowFullBloom] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [importJson, setImportJson] = useState('');
@@ -38,6 +39,14 @@ export default function Home() {
     const dueHL = getDueProblems(problems, p.reviews, { mode: 'highlevel' });
     setDueCountHL(dueHL.problems.length);
     setDueHLIsDue(dueHL.isDue);
+
+    // Today's drill count
+    const today = new Date().toISOString().slice(0, 10);
+    const drillToday = Object.values(p.reviews || {}).reduce((count, review) => {
+      const todayEntries = (review.history || []).filter(h => h.date && h.date.startsWith(today));
+      return count + todayEntries.length;
+    }, 0);
+    setTodayDrillCount(drillToday);
 
     // Flashcard stats
     const allFlashcards = getAllFlashcards();
@@ -62,6 +71,11 @@ export default function Home() {
       const mergedBoxes = merged.flashcards?.boxes || {};
       setFlashcardMastered(getMasteredCount(mergedBoxes));
       setFlashcardLearned(getLearnedCount(mergedBoxes));
+      const td = new Date().toISOString().slice(0, 10);
+      const dtc = Object.values(merged.reviews || {}).reduce((c, r) => {
+        return c + (r.history || []).filter(h => h.date && h.date.startsWith(td)).length;
+      }, 0);
+      setTodayDrillCount(dtc);
     });
   }, []);
 
@@ -195,12 +209,15 @@ export default function Home() {
 
       {/* Stats Cards */}
       <div className="mt-4 space-y-3">
-        {/* Today's review count */}
+        {/* Today's activity */}
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-lg font-bold text-gray-700 font-kiwi">
-                今日の復習: <span className="text-sakura-500">{dueCount + dueCountHL}</span>問
+                今日: ドリル <span className="text-sakura-500">{todayDrillCount}</span>問
+                {flashcardLearned > 0 && (
+                  <span className="text-purple-500 ml-2">暗記 {flashcardLearned}枚</span>
+                )}
               </p>
               {streak.currentStreak > 0 && (
                 <p className="text-sm text-warm-orange mt-1">
@@ -208,7 +225,7 @@ export default function Home() {
                 </p>
               )}
             </div>
-            <div className="text-3xl">📚</div>
+            <div className="text-3xl">{todayDrillCount > 0 ? '✨' : '📚'}</div>
           </div>
         </div>
 
