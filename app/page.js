@@ -230,17 +230,21 @@ export default function Home() {
             {dueIsDue ? (
               <>ドリルを始める ({dueCount}問) 🌸</>
             ) : (
-              <>もう一度チャレンジ ({dueCount}問) 💪</>
+              <>もう一度チャレンジ 💪</>
             )}
           </button>
         </Link>
 
-        {dueHLIsDue && dueCountHL > 0 && (
+        {dueCountHL > 0 && (
           <Link href="/drill?mode=highlevel" className="block">
             <button
               className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi"
             >
-              ハイレベル ({dueCountHL}問) 🔥
+              {dueHLIsDue ? (
+                <>ハイレベル ({dueCountHL}問) 🔥</>
+              ) : (
+                <>ハイレベル もう一度 🔥</>
+              )}
             </button>
           </Link>
         )}
