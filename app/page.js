@@ -8,7 +8,7 @@ import { loadProgress, saveProgress, syncFromSupabase } from '../lib/storage';
 import { getAllProblems } from '../lib/problems';
 import { getDueProblems, calculateNextReview } from '../lib/spaced-repetition';
 import { getAllFlashcards } from '../lib/flashcards';
-import { getMasteredCount } from '../lib/leitner';
+import { getMasteredCount, getLearnedCount } from '../lib/leitner';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -18,6 +18,7 @@ export default function Home() {
   const [dueCountHL, setDueCountHL] = useState(0);
   const [dueHLIsDue, setDueHLIsDue] = useState(true);
   const [flashcardMastered, setFlashcardMastered] = useState(0);
+  const [flashcardLearned, setFlashcardLearned] = useState(0);
   const [flashcardTotal, setFlashcardTotal] = useState(0);
   const [showFullBloom, setShowFullBloom] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -40,8 +41,10 @@ export default function Home() {
 
     // Flashcard stats
     const allFlashcards = getAllFlashcards();
+    const boxes = p.flashcards?.boxes || {};
     setFlashcardTotal(allFlashcards.length);
-    setFlashcardMastered(getMasteredCount(p.flashcards?.boxes || {}));
+    setFlashcardMastered(getMasteredCount(boxes));
+    setFlashcardLearned(getLearnedCount(boxes));
 
     setLoading(false);
 
@@ -56,7 +59,9 @@ export default function Home() {
       const r2 = getDueProblems(allProblems, merged.reviews, { mode: 'highlevel' });
       setDueCountHL(r2.problems.length);
       setDueHLIsDue(r2.isDue);
-      setFlashcardMastered(getMasteredCount(merged.flashcards?.boxes || {}));
+      const mergedBoxes = merged.flashcards?.boxes || {};
+      setFlashcardMastered(getMasteredCount(mergedBoxes));
+      setFlashcardLearned(getLearnedCount(mergedBoxes));
     });
   }, []);
 
@@ -264,7 +269,9 @@ export default function Home() {
           >
             暗記カード 🃏
             <span className="ml-2 text-xs font-normal opacity-80">
-              {flashcardMastered}/{flashcardTotal}枚マスター
+              {flashcardMastered > 0
+                ? `${flashcardMastered}/${flashcardTotal}枚マスター`
+                : `${flashcardLearned}/${flashcardTotal}枚おぼえた`}
             </span>
           </button>
         </Link>
