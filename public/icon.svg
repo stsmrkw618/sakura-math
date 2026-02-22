@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#FFF5F7"/>
+  <g transform="translate(256,240)">
+    <!-- Petals -->
+    <ellipse cx="0" cy="-70" rx="38" ry="58" fill="#F472B6" opacity="0.9"/>
+    <ellipse cx="0" cy="-70" rx="38" ry="58" fill="#F472B6" opacity="0.9" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-70" rx="38" ry="58" fill="#F472B6" opacity="0.9" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-70" rx="38" ry="58" fill="#F472B6" opacity="0.9" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-70" rx="38" ry="58" fill="#F472B6" opacity="0.9" transform="rotate(288)"/>
+    <!-- Center -->
+    <circle cx="0" cy="0" r="22" fill="#FBBF24"/>
+    <circle cx="0" cy="0" r="14" fill="#FB923C" opacity="0.6"/>
+  </g>
+  <!-- Text -->
+  <text x="256" y="420" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="64" fill="#EC4899">SAKURA</text>
+</svg>

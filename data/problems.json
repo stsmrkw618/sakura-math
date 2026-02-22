@@ -1,0 +1,60 @@
+{
+  "problems": [
+    {
+      "id": "2025-04-001",
+      "question": "ある品物を定価の2割引きで買ったら960円でした。定価はいくらですか。",
+      "answer": "1200円\n\n【解き方】\n2割引き = 定価の8割（0.8）\n960 ÷ 0.8 = 1200円",
+      "source": "4月実力テスト 大問3(2)",
+      "correctRate": 38,
+      "tags": ["割合", "文章題"],
+      "difficulty": "標準",
+      "stumblingPoint": "「2割引き」を「定価の0.8倍」と変換できるか。割る方向を間違えてかけ算してしまいやすい。",
+      "figure": null
+    },
+    {
+      "id": "2025-04-002",
+      "question": "下の図で、三角形ABCの面積を求めなさい。",
+      "answer": "24cm²\n\n【解き方】\n底辺BC=8cm、高さAH=6cm\n8 × 6 ÷ 2 = 24cm²",
+      "source": "4月実力テスト 大問5(1)",
+      "correctRate": 55,
+      "tags": ["図形", "面積"],
+      "difficulty": "標準",
+      "stumblingPoint": "どこが底辺でどこが高さかを見抜けるか。高さは底辺に垂直な線であることを理解しているか。",
+      "figure": {
+        "type": "svg",
+        "svg": "<svg viewBox='0 0 200 160' xmlns='http://www.w3.org/2000/svg'><polygon points='20,140 180,140 100,20' fill='none' stroke='#374151' stroke-width='2'/><line x1='100' y1='20' x2='100' y2='140' stroke='#F472B6' stroke-width='1.5' stroke-dasharray='6,4'/><text x='10' y='138' font-size='14' fill='#374151'>B</text><text x='182' y='138' font-size='14' fill='#374151'>C</text><text x='96' y='14' font-size='14' fill='#374151'>A</text><text x='104' y='85' font-size='12' fill='#F472B6'>6cm</text><text x='85' y='156' font-size='12' fill='#374151'>8cm</text></svg>",
+        "description": "三角形ABC。底辺BCが8cm、頂点Aから底辺BCに下ろした垂線AHの長さが6cm。"
+      }
+    },
+    {
+      "id": "2025-04-003",
+      "question": "下の図で、角アの大きさを求めなさい。",
+      "answer": "65°\n\n【解き方】\n三角形の内角の和は180°\n180° - 50° - 65° = 65°",
+      "source": "4月実力テスト 大問6(2)",
+      "correctRate": 42,
+      "tags": ["角度", "図形"],
+      "difficulty": "標準",
+      "stumblingPoint": "三角形の内角の和が180°であることを使えるか。複雑な図から該当する三角形を見つけ出せるか。",
+      "figure": {
+        "type": "image",
+        "path": "figures/2025-04-003.png",
+        "description": "複数の直線が交わる図形。三角形の一部に50°と65°の角度が示されており、角アを求める。"
+      }
+    }
+  ],
+  "tags": [
+    { "id": "calc", "name": "計算", "description": "四則演算、筆算、暗算、計算の工夫" },
+    { "id": "unit", "name": "単位換算", "description": "長さ、重さ、かさ、時間の単位変換" },
+    { "id": "ratio", "name": "割合", "description": "割合、百分率、歩合、割引" },
+    { "id": "figure", "name": "図形", "description": "平面図形、立体図形の性質" },
+    { "id": "word", "name": "文章題", "description": "文章を読んで立式する力" },
+    { "id": "speed", "name": "速さ", "description": "速さ、時間、距離の関係" },
+    { "id": "pattern", "name": "規則性", "description": "数列、規則を見つける問題" },
+    { "id": "combo", "name": "場合の数", "description": "並べ方、組み合わせ" },
+    { "id": "proportion", "name": "比", "description": "比の計算、比例・反比例" },
+    { "id": "angle", "name": "角度", "description": "角度の計算、三角形・多角形の角" },
+    { "id": "area", "name": "面積", "description": "面積の求め方、等積変形" },
+    { "id": "volume", "name": "体積", "description": "体積・容積の計算" },
+    { "id": "other", "name": "その他", "description": "上記に分類できないもの" }
+  ]
+}
