@@ -7,6 +7,8 @@ import PetalFall from '../components/PetalFall';
 import { loadProgress, saveProgress } from '../lib/storage';
 import { getAllProblems } from '../lib/problems';
 import { getDueProblems, calculateNextReview } from '../lib/spaced-repetition';
+import { getAllFlashcards } from '../lib/flashcards';
+import { getMasteredCount } from '../lib/leitner';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -15,6 +17,8 @@ export default function Home() {
   const [dueIsDue, setDueIsDue] = useState(true);
   const [dueCountHL, setDueCountHL] = useState(0);
   const [dueHLIsDue, setDueHLIsDue] = useState(true);
+  const [flashcardMastered, setFlashcardMastered] = useState(0);
+  const [flashcardTotal, setFlashcardTotal] = useState(0);
   const [showFullBloom, setShowFullBloom] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [importJson, setImportJson] = useState('');
@@ -33,6 +37,11 @@ export default function Home() {
     const dueHL = getDueProblems(problems, p.reviews, { mode: 'highlevel' });
     setDueCountHL(dueHL.problems.length);
     setDueHLIsDue(dueHL.isDue);
+
+    // Flashcard stats
+    const allFlashcards = getAllFlashcards();
+    setFlashcardTotal(allFlashcards.length);
+    setFlashcardMastered(getMasteredCount(p.flashcards?.boxes || {}));
 
     setLoading(false);
   }, []);
@@ -232,6 +241,17 @@ export default function Home() {
             ) : (
               <>もう一度チャレンジ 💪</>
             )}
+          </button>
+        </Link>
+
+        <Link href="/flashcards" className="block">
+          <button
+            className="w-full py-3 bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-purple-100 active:scale-[0.98] transition-transform font-kiwi"
+          >
+            暗記カード 🃏
+            <span className="ml-2 text-xs font-normal opacity-80">
+              {flashcardMastered}/{flashcardTotal}枚マスター
+            </span>
           </button>
         </Link>
 

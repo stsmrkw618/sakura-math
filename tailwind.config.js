@@ -44,12 +44,17 @@ module.exports = {
           '0%, 100%': { transform: 'scale(1)' },
           '50%': { transform: 'scale(1.05)' },
         },
+        comboPulse: {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.15)' },
+        },
       },
       animation: {
         bloom: 'bloom 0.6s ease-out forwards',
         'petal-fall': 'petalFall 3s ease-in-out forwards',
         'fade-in': 'fadeIn 0.4s ease-out forwards',
         pulse: 'pulse 2s ease-in-out infinite',
+        'combo-pulse': 'comboPulse 0.3s ease-out',
       },
     },
   },
