@@ -40,6 +40,117 @@
         "path": "figures/2025-04-003.png",
         "description": "複数の直線が交わる図形。三角形の一部に50°と65°の角度が示されており、角アを求める。"
       }
+    },
+    {
+      "id": "2026-02-001",
+      "question": "□−345＝745\n□にあてはまる数を求めなさい。",
+      "answer": "1090\n\n【解き方】\n□＝745＋345＝1090",
+      "source": "第405回公開テスト 大問1(8)",
+      "correctRate": 89,
+      "tags": ["計算"],
+      "difficulty": "基礎",
+      "stumblingPoint": "ひき算の逆算。□が引かれる数（左側）にあるとき、□＝答え＋引く数。ひき算とたし算の逆の関係を正しく使えるか。",
+      "figure": null
+    },
+    {
+      "id": "2026-02-002",
+      "question": "消しゴム2個とえんぴつ3本の代金は580円で、消しゴム3個とえんぴつ4本の代金は810円です。消しゴム1個の代金は何円ですか。",
+      "answer": "110円\n\n【解き方】\n消しゴム2個＋えんぴつ3本＝580円…①\n消しゴム3個＋えんぴつ4本＝810円…②\n\nえんぴつの数をそろえる:\n①×4: 消しゴム8個＋えんぴつ12本＝2320円\n②×3: 消しゴム9個＋えんぴつ12本＝2430円\n\n差を取ると:\n消しゴム1個＝2430−2320＝110円",
+      "source": "第405回公開テスト 大問1(12)",
+      "correctRate": 46,
+      "tags": ["文章題"],
+      "difficulty": "標準",
+      "stumblingPoint": "消去算の考え方。2つの式からどちらかの個数をそろえて、差を取ることで1つの値段を求める。何倍すればそろうかを見つけられるか。",
+      "figure": null
+    },
+    {
+      "id": "2026-02-003",
+      "question": "ある年の4月20日は木曜日です。同じ年の6月1日は何曜日ですか。",
+      "answer": "木曜日\n\n【解き方】\n4月20日から6月1日までの日数を数える。\n4月の残り: 30−20＝10日\n5月: 31日\n6月1日まで: ＋1日\n合計: 10＋31＋1＝42日後\n\n42÷7＝6あまり0\nちょうど6週間後なので、同じ木曜日。",
+      "source": "第405回公開テスト 大問1(13)",
+      "correctRate": 44,
+      "tags": ["文章題"],
+      "difficulty": "標準",
+      "stumblingPoint": "日暦算。月をまたぐとき各月の日数を正しく足せるか（4月は30日、5月は31日）。7で割ったあまりで曜日を求める考え方。あまり0＝同じ曜日。",
+      "figure": null
+    },
+    {
+      "id": "2026-02-004",
+      "question": "ま、め、ま、き、ま、め、ま、き、ま、め、……と規則的にくり返し並んでいます。「ま」だけを数えて50番目の「ま」は、はじめから数えると何番目ですか。",
+      "answer": "99番目\n\n【解き方】\n「ま、め、ま、き」の4個が1セットのくり返し。\n1セットに「ま」は2個ある（1番目と3番目）。\n\n50÷2＝25 → 50番目の「ま」は25セット目にある。\n25セット目の「ま」は、セットの3番目（2個目の「ま」）。\n\n4×24＋3＝99番目",
+      "source": "第405回公開テスト 大問2(3)",
+      "correctRate": 26,
+      "tags": ["規則性"],
+      "difficulty": "発展",
+      "stumblingPoint": "群数列。まず繰り返しの1セットを見つけ（4個で1セット）、セット内の「ま」の個数と位置（1番目と3番目）を把握する。50番目の「ま」がどのセットの何番目かを正確に求められるか。",
+      "figure": null
+    },
+    {
+      "id": "2026-02-005",
+      "question": "A、B、Cの3種類のおもりがあります。同じ記号のおもりは同じ重さです。下の図のようにてんびんにのせたところ、つり合いました。A1個の重さはB何個分の重さと同じですか。",
+      "answer": "4個\n\n【解き方】\nてんびん①: AABB＝AC\n両方からAを取ると → ABB＝C …★\n\nてんびん②: AA＝BBC\n★のC＝ABBを代入すると\nAA＝BB＋ABB＝ABBB\n両方からAを取ると\nA＝BBBB\n\nよって、A1個＝B4個分",
+      "source": "第405回公開テスト 大問4(1)",
+      "correctRate": 70,
+      "tags": ["文章題"],
+      "difficulty": "標準",
+      "stumblingPoint": "てんびんの問題。2つの式から代入して解く消去算的な考え方。「両方から同じものを取り除く」操作と「別の式に代入する」操作を組み合わせられるか。",
+      "figure": {
+        "type": "svg",
+        "svg": "<svg viewBox='0 0 280 170' xmlns='http://www.w3.org/2000/svg'><text x='140' y='14' text-anchor='middle' font-size='11' fill='#374151' font-weight='bold'>てんびん①</text><polygon points='140,60 134,70 146,70' fill='#9CA3AF'/><line x1='35' y1='60' x2='245' y2='60' stroke='#374151' stroke-width='2'/><line x1='55' y1='60' x2='55' y2='45' stroke='#374151' stroke-width='1'/><rect x='15' y='24' width='80' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='55' y='39' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A A B B</text><line x1='225' y1='60' x2='225' y2='45' stroke='#374151' stroke-width='1'/><rect x='195' y='24' width='60' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='225' y='39' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A C</text><text x='140' y='95' text-anchor='middle' font-size='11' fill='#374151' font-weight='bold'>てんびん②</text><polygon points='140,140 134,150 146,150' fill='#9CA3AF'/><line x1='35' y1='140' x2='245' y2='140' stroke='#374151' stroke-width='2'/><line x1='55' y1='140' x2='55' y2='125' stroke='#374151' stroke-width='1'/><rect x='25' y='104' width='60' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='55' y='119' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A A</text><line x1='225' y1='140' x2='225' y2='125' stroke='#374151' stroke-width='1'/><rect x='190' y='104' width='70' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='225' y='119' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>B B C</text></svg>",
+        "description": "てんびん①: 左にA2個B2個、右にA1個C1個でつり合い。てんびん②: 左にA2個、右にB2個C1個でつり合い。"
+      }
+    },
+    {
+      "id": "2026-02-006",
+      "question": "A、B、Cの3種類のおもりがあります。同じ記号のおもりは同じ重さです。下の図のようにてんびんにのせたところ、つり合いました。C1個の重さはB何個分の重さと同じですか。",
+      "answer": "6個\n\n【解き方】\nてんびん①より: ABB＝C\nまた大問4(1)より: A1個＝B4個\n\nよって C＝ABB＝B4個＋B2個＝B6個\nC1個＝B6個分",
+      "source": "第405回公開テスト 大問4(2)",
+      "correctRate": 36,
+      "tags": ["文章題"],
+      "difficulty": "標準",
+      "stumblingPoint": "4(1)の結果（A＝B4個）を使って、C＝ABB＝B4＋B2＝B6と求める。複数のステップを積み重ねる力が必要。",
+      "figure": {
+        "type": "svg",
+        "svg": "<svg viewBox='0 0 280 170' xmlns='http://www.w3.org/2000/svg'><text x='140' y='14' text-anchor='middle' font-size='11' fill='#374151' font-weight='bold'>てんびん①</text><polygon points='140,60 134,70 146,70' fill='#9CA3AF'/><line x1='35' y1='60' x2='245' y2='60' stroke='#374151' stroke-width='2'/><line x1='55' y1='60' x2='55' y2='45' stroke='#374151' stroke-width='1'/><rect x='15' y='24' width='80' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='55' y='39' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A A B B</text><line x1='225' y1='60' x2='225' y2='45' stroke='#374151' stroke-width='1'/><rect x='195' y='24' width='60' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='225' y='39' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A C</text><text x='140' y='95' text-anchor='middle' font-size='11' fill='#374151' font-weight='bold'>てんびん②</text><polygon points='140,140 134,150 146,150' fill='#9CA3AF'/><line x1='35' y1='140' x2='245' y2='140' stroke='#374151' stroke-width='2'/><line x1='55' y1='140' x2='55' y2='125' stroke='#374151' stroke-width='1'/><rect x='25' y='104' width='60' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='55' y='119' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A A</text><line x1='225' y1='140' x2='225' y2='125' stroke='#374151' stroke-width='1'/><rect x='190' y='104' width='70' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='225' y='119' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>B B C</text></svg>",
+        "description": "てんびん①: 左にA2個B2個、右にA1個C1個でつり合い。てんびん②: 左にA2個、右にB2個C1個でつり合い。"
+      }
+    },
+    {
+      "id": "2026-02-007",
+      "question": "A、B、Cの3種類のおもりがあります。同じ記号のおもりは同じ重さです。下の図のようにてんびんにのせたところ、つり合いました。A1個、B1個、C1個を合わせた重さとつり合うには、Bが何個必要ですか。",
+      "answer": "11個\n\n【解き方】\nA1個＝B4個（大問4(1)より）\nC1個＝B6個（大問4(2)より）\n\nA＋B＋C\n＝B4個＋B1個＋B6個\n＝B11個\n\nよって、11個",
+      "source": "第405回公開テスト 大問4(3)",
+      "correctRate": 26,
+      "tags": ["文章題"],
+      "difficulty": "発展",
+      "stumblingPoint": "4(1)(2)の結果を使って全部Bに置き換える。A＝B4個、C＝B6個を正しく求めた上で、合計を計算する。複数ステップの積み上げ。",
+      "figure": {
+        "type": "svg",
+        "svg": "<svg viewBox='0 0 280 170' xmlns='http://www.w3.org/2000/svg'><text x='140' y='14' text-anchor='middle' font-size='11' fill='#374151' font-weight='bold'>てんびん①</text><polygon points='140,60 134,70 146,70' fill='#9CA3AF'/><line x1='35' y1='60' x2='245' y2='60' stroke='#374151' stroke-width='2'/><line x1='55' y1='60' x2='55' y2='45' stroke='#374151' stroke-width='1'/><rect x='15' y='24' width='80' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='55' y='39' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A A B B</text><line x1='225' y1='60' x2='225' y2='45' stroke='#374151' stroke-width='1'/><rect x='195' y='24' width='60' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='225' y='39' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A C</text><text x='140' y='95' text-anchor='middle' font-size='11' fill='#374151' font-weight='bold'>てんびん②</text><polygon points='140,140 134,150 146,150' fill='#9CA3AF'/><line x1='35' y1='140' x2='245' y2='140' stroke='#374151' stroke-width='2'/><line x1='55' y1='140' x2='55' y2='125' stroke='#374151' stroke-width='1'/><rect x='25' y='104' width='60' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='55' y='119' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>A A</text><line x1='225' y1='140' x2='225' y2='125' stroke='#374151' stroke-width='1'/><rect x='190' y='104' width='70' height='20' rx='4' fill='#FFF5F7' stroke='#F472B6' stroke-width='1.5'/><text x='225' y='119' text-anchor='middle' font-size='13' fill='#F472B6' font-weight='bold'>B B C</text></svg>",
+        "description": "てんびん①: 左にA2個B2個、右にA1個C1個でつり合い。てんびん②: 左にA2個、右にB2個C1個でつり合い。"
+      }
+    },
+    {
+      "id": "2026-02-008",
+      "question": "箱の中に白色のカード[1][2][3][4]と、赤色のカード[1][2][3][4]と、青色のカード[1][2][3][4]の12枚のカードが入っています。箱の中から同時に2枚のカードをひきます。\n\n得点のルール:\n・2枚のカードに書かれた整数の合計を得点とする。\n・2枚のカードの色が同じとき、1点を追加する。\n・2枚のカードの数字が同じとき、その数字の分だけ得点を追加する。\n\n得点が3点になるカードの組み合わせは全部で何通りありますか。",
+      "answer": "9通り\n\n【解き方】\n得点3点になる組み合わせを探す。\n\n① 数字(1,1)を引く場合（必ず違う色）:\n得点＝1＋1＋1(同数ボーナス)＝3 ✓\n(白1,赤1)(白1,青1)(赤1,青1)→ 3通り\n\n② 数字(1,2)を引く場合（違う色のとき）:\n得点＝1＋2＝3 ✓\n白1と赤2, 白1と青2, 赤1と白2, 赤1と青2, 青1と白2, 青1と赤2 → 6通り\n\n合計: 3＋6＝9通り",
+      "source": "第405回公開テスト 大問5(2)",
+      "correctRate": 15,
+      "tags": ["場合の数"],
+      "difficulty": "発展",
+      "stumblingPoint": "得点ルールを正しく理解した上で、場合分けを漏れなく行えるか。「同じ数字ボーナス」がある(1,1)と、ボーナスなしで合計3になる(1,2)の両方のパターンに気づけるか。順番が違うものも数えることに注意。",
+      "figure": null
+    },
+    {
+      "id": "2026-02-009",
+      "question": "箱の中に白色のカード[1][2][3][4]と、赤色のカード[1][2][3][4]と、青色のカード[1][2][3][4]の12枚のカードが入っています。箱の中から同時に2枚のカードをひきます。\n\n得点のルール:\n・2枚のカードに書かれた整数の合計を得点とする。\n・2枚のカードの色が同じとき、1点を追加する。\n・2枚のカードの数字が同じとき、その数字の分だけ得点を追加する。\n\n得点が6点になるカードの組み合わせは全部で何通りありますか。",
+      "answer": "15通り\n\n【解き方】\n得点6点になる組み合わせを場合分けする。\n\n① 数字(2,4)で違う色:\n得点＝2＋4＝6 ✓ → 6通り\n\n② 数字(1,4)で同じ色:\n得点＝1＋4＋1(同色)＝6 ✓\n色は3色 → 3通り\n\n③ 数字(2,3)で同じ色:\n得点＝2＋3＋1(同色)＝6 ✓\n色は3色 → 3通り\n\n④ 数字(2,2)で違う色:\n得点＝2＋2＋2(同数ボーナス)＝6 ✓ → 3通り\n\n合計: 6＋3＋3＋3＝15通り",
+      "source": "第405回公開テスト 大問5(3)",
+      "correctRate": 7,
+      "tags": ["場合の数"],
+      "difficulty": "発展",
+      "stumblingPoint": "6点になるパターンを漏れなく場合分けする力。「同色ボーナス」と「同数ボーナス」の両方を考慮し、(2,4)違う色・(1,4)同色・(2,3)同色・(2,2)同数の4パターンすべてに気づけるか。",
+      "figure": null
     }
   ],
   "tags": [
