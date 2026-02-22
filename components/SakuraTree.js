@@ -116,7 +116,7 @@ export default function SakuraTree({ bloomCount = 0 }) {
           rx={cloud.rx}
           ry={cloud.ry}
           fill="#BBF7D0"
-          opacity="0.35"
+          opacity="0.25"
         />
       ))}
 
