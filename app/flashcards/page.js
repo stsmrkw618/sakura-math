@@ -25,9 +25,9 @@ const COMBO_MILESTONES = {
 };
 
 const CHARACTERS = [
-  { id: 'frieren', file: 'フリーレン.jpg', name: 'フリーレン' },
-  { id: 'fern', file: 'フェルン.png', name: 'フェルン' },
-  { id: 'stark', file: 'シュタルク.png', name: 'シュタルク' },
+  { id: 'frieren', file: 'frieren.jpg', name: 'フリーレン' },
+  { id: 'fern', file: 'fern.png', name: 'フェルン' },
+  { id: 'stark', file: 'stark.png', name: 'シュタルク' },
 ];
 
 const CHARACTER_LINES = {

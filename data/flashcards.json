@@ -1,9 +1,7 @@
 {
   "categories": [
     { "id": "unit", "name": "単位換算", "emoji": "📏", "color": "purple" },
-    { "id": "formula", "name": "公式", "emoji": "📐", "color": "blue" },
-    { "id": "rule", "name": "きまりごと", "emoji": "💡", "color": "yellow" },
-    { "id": "number", "name": "数のきまり", "emoji": "🔢", "color": "green" }
+    { "id": "rule", "name": "きまりごと", "emoji": "💡", "color": "yellow" }
   ],
   "cards": [
     {
@@ -40,48 +38,6 @@
       "back": "100cm",
       "category": "unit",
       "hint": "c（センチ）は「100分の1」という意味"
-    },
-    {
-      "id": "fc-009",
-      "front": "三角形の面積の公式は？",
-      "back": "底辺 × 高さ ÷ 2",
-      "category": "formula",
-      "hint": "長方形の半分と考える"
-    },
-    {
-      "id": "fc-010",
-      "front": "平行四辺形の面積の公式は？",
-      "back": "底辺 × 高さ",
-      "category": "formula",
-      "hint": "切って動かすと長方形になる"
-    },
-    {
-      "id": "fc-011",
-      "front": "台形の面積の公式は？",
-      "back": "（上底 + 下底）× 高さ ÷ 2",
-      "category": "formula",
-      "hint": "同じ台形を2つ合わせると平行四辺形になる"
-    },
-    {
-      "id": "fc-012",
-      "front": "ひし形の面積の公式は？",
-      "back": "対角線 × 対角線 ÷ 2",
-      "category": "formula",
-      "hint": "ひし形は2本の対角線で4つの直角三角形に分かれる"
-    },
-    {
-      "id": "fc-013",
-      "front": "円の面積の公式は？",
-      "back": "半径 × 半径 × 3.14",
-      "category": "formula",
-      "hint": "π（パイ）= 3.14 として計算する"
-    },
-    {
-      "id": "fc-014",
-      "front": "円周の長さの公式は？",
-      "back": "直径 × 3.14",
-      "category": "formula",
-      "hint": "直径 = 半径 × 2"
     },
     {
       "id": "fc-015",
@@ -187,27 +143,6 @@
       "back": "師走（しわす）",
       "category": "rule",
       "hint": "年末で「師（お坊さん）」も「走」り回るほど忙しい月"
-    },
-    {
-      "id": "fc-018",
-      "front": "速さの公式3つは？",
-      "back": "速さ = 距離 ÷ 時間\n距離 = 速さ × 時間\n時間 = 距離 ÷ 速さ",
-      "category": "number",
-      "hint": "「はじき」の図で覚える（は=速さ、じ=時間、き=距離）"
-    },
-    {
-      "id": "fc-019",
-      "front": "1/4 = 小数でいくつ？",
-      "back": "0.25",
-      "category": "number",
-      "hint": "1 ÷ 4 = 0.25"
-    },
-    {
-      "id": "fc-020",
-      "front": "1/8 = 小数でいくつ？",
-      "back": "0.125",
-      "category": "number",
-      "hint": "1 ÷ 8 = 0.125　（1/4の半分）"
     }
   ]
 }
