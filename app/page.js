@@ -213,11 +213,11 @@ export default function Home() {
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-lg font-bold text-gray-700 font-kiwi">
+              <p className="text-base font-bold text-gray-700 font-kiwi">
                 今日: ドリル <span className="text-sakura-500">{todayDrillCount}</span>問
-                {flashcardLearned > 0 && (
-                  <span className="text-purple-500 ml-2">暗記 {flashcardLearned}枚</span>
-                )}
+              </p>
+              <p className="text-base font-bold text-gray-700 font-kiwi mt-0.5">
+                暗記カード（覚えた）: <span className="text-purple-500">{flashcardLearned}</span>枚
               </p>
               {streak.currentStreak > 0 && (
                 <p className="text-sm text-warm-orange mt-1">
