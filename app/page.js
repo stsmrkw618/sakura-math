@@ -14,7 +14,6 @@ export default function Home() {
   const [dueCount, setDueCount] = useState(0);
   const [dueCountHL, setDueCountHL] = useState(0);
   const [showFullBloom, setShowFullBloom] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [importJson, setImportJson] = useState('');
   const [importStatus, setImportStatus] = useState(null);
@@ -30,10 +29,6 @@ export default function Home() {
     setDueCount(due.length);
     const dueHL = getDueProblems(problems, p.reviews, { mode: 'highlevel' });
     setDueCountHL(dueHL.length);
-
-    // Check admin mode from URL
-    const params = new URLSearchParams(window.location.search);
-    setIsAdmin(params.get('admin') === '1');
 
     setLoading(false);
   }, []);
@@ -156,15 +151,6 @@ export default function Home() {
             {treeGeneration}本目のさくら
           </p>
         )}
-        {/* Admin button */}
-        {isAdmin && (
-          <button
-            onClick={() => { setShowAdminModal(true); setImportStatus(null); }}
-            className="absolute top-0 right-0 text-xl text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            ⚙️
-          </button>
-        )}
       </div>
 
       {/* Sakura Tree */}
@@ -266,6 +252,18 @@ export default function Home() {
         {streak.longestStreak > 0 && (
           <p className="mt-0.5">最高記録: {streak.longestStreak}日連続</p>
         )}
+        <button
+          onClick={() => {
+            const pw = window.prompt('パスワードを入力');
+            if (pw === '0618') {
+              setShowAdminModal(true);
+              setImportStatus(null);
+            }
+          }}
+          className="mt-3 text-gray-300 text-[10px]"
+        >
+          管理
+        </button>
       </div>
 
       {/* Admin Modal */}
