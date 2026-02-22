@@ -6,20 +6,20 @@ import DrillCard from '../../components/DrillCard';
 import ProgressBar from '../../components/ProgressBar';
 import { loadProgress, saveProgress, updateStreak, addBloom, recordReview } from '../../lib/storage';
 import { getAllProblems } from '../../lib/problems';
-import { getDueProblems } from '../../lib/spaced-repetition';
+import { getDueProblems, selectBatch } from '../../lib/spaced-repetition';
 
 export default function DrillPage() {
   const [loading, setLoading] = useState(true);
   const [problems, setProblems] = useState([]);
+  const [totalDue, setTotalDue] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState({});
   const [done, setDone] = useState(false);
   const [newBlooms, setNewBlooms] = useState(0);
   const [showBloomAnimation, setShowBloomAnimation] = useState(false);
   const [mode, setMode] = useState('normal');
 
   useEffect(() => {
-    // Read mode from URL (static export can't use useSearchParams)
     const params = new URLSearchParams(window.location.search);
     const m = params.get('mode') === 'highlevel' ? 'highlevel' : 'normal';
     setMode(m);
@@ -27,7 +27,11 @@ export default function DrillPage() {
     const progress = loadProgress();
     const allProblems = getAllProblems();
     const due = getDueProblems(allProblems, progress.reviews, { mode: m });
-    setProblems(due);
+    setTotalDue(due.length);
+
+    // バッチ選択（5〜10問、大問グループ単位でシャッフル）
+    const batch = selectBatch(due);
+    setProblems(batch);
     setLoading(false);
   }, []);
 
@@ -35,7 +39,7 @@ export default function DrillPage() {
     const problem = problems[currentIndex];
 
     // Record result
-    setResults((prev) => [...prev, { problem, quality }]);
+    setResults((prev) => ({ ...prev, [problem.id]: quality }));
 
     // Update progress
     let progress = loadProgress();
@@ -52,7 +56,7 @@ export default function DrillPage() {
 
     saveProgress(progress);
 
-    // Move to next question after a delay
+    // Auto-advance after a delay
     setTimeout(() => {
       if (currentIndex + 1 < problems.length) {
         setCurrentIndex((prev) => prev + 1);
@@ -60,6 +64,12 @@ export default function DrillPage() {
         setDone(true);
       }
     }, quality >= 3 ? 1200 : 800);
+  };
+
+  const goTo = (index) => {
+    if (index >= 0 && index < problems.length) {
+      setCurrentIndex(index);
+    }
   };
 
   if (loading) {
@@ -92,12 +102,15 @@ export default function DrillPage() {
   }
 
   if (done) {
-    const correctCount = results.filter((r) => r.quality >= 3).length;
-    const perfectCount = results.filter((r) => r.quality === 5).length;
+    const resultEntries = problems
+      .filter((p) => results[p.id] !== undefined)
+      .map((p) => ({ problem: p, quality: results[p.id] }));
+    const correctCount = resultEntries.filter((r) => r.quality >= 3).length;
+    const remaining = totalDue - problems.length;
 
     // Tag-based summary
     const tagResults = {};
-    results.forEach(({ problem, quality }) => {
+    resultEntries.forEach(({ problem, quality }) => {
       problem.tags.forEach((tag) => {
         if (!tagResults[tag]) tagResults[tag] = { correct: 0, total: 0 };
         tagResults[tag].total += 1;
@@ -109,7 +122,7 @@ export default function DrillPage() {
       <main className="pt-6 animate-fade-in">
         <div className="text-center mb-6">
           <p className="text-5xl mb-3">
-            {correctCount === results.length ? '🌟' : correctCount > 0 ? '🌸' : '💪'}
+            {correctCount === resultEntries.length ? '🌟' : correctCount > 0 ? '🌸' : '💪'}
           </p>
           <h2 className="text-xl font-bold text-gray-700 font-kiwi">
             お疲れさま！
@@ -120,7 +133,7 @@ export default function DrillPage() {
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 border border-sakura-100 shadow-sm mb-4">
           <div className="grid grid-cols-3 text-center divide-x divide-gray-100">
             <div>
-              <p className="text-2xl font-bold text-sakura-500 font-kiwi">{results.length}</p>
+              <p className="text-2xl font-bold text-sakura-500 font-kiwi">{resultEntries.length}</p>
               <p className="text-xs text-gray-500">問題</p>
             </div>
             <div>
@@ -153,10 +166,10 @@ export default function DrillPage() {
         </div>
 
         {/* Individual results */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-100 shadow-sm mb-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-100 shadow-sm mb-4">
           <p className="text-sm font-bold text-gray-600 mb-3">各問題</p>
           <div className="space-y-2">
-            {results.map(({ problem, quality }, i) => (
+            {resultEntries.map(({ problem, quality }, i) => (
               <div key={i} className="flex items-start gap-2">
                 <span className="text-lg mt-[-2px]">
                   {quality === 5 ? '🌸' : quality === 3 ? '🤔' : '😢'}
@@ -169,16 +182,40 @@ export default function DrillPage() {
           </div>
         </div>
 
-        <Link href="/">
-          <button className="w-full py-3.5 bg-gradient-to-r from-sakura-400 to-sakura-500 text-white rounded-2xl font-bold shadow-lg shadow-sakura-200">
-            ホームに戻る 🌸
-          </button>
-        </Link>
+        {/* Remaining and navigation */}
+        {remaining > 0 && (
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm mb-4 text-center">
+            <p className="text-sm text-gray-600">
+              残り <span className="font-bold text-sakura-500">{remaining}問</span> あります
+            </p>
+          </div>
+        )}
+
+        <div className="space-y-3 mb-6">
+          {remaining > 0 && (
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full py-3.5 bg-gradient-to-r from-sakura-400 to-sakura-500 text-white rounded-2xl font-bold shadow-lg shadow-sakura-200"
+            >
+              次の問題に挑戦 🌸
+            </button>
+          )}
+          <Link href="/">
+            <button className={`w-full py-3.5 rounded-2xl font-bold ${
+              remaining > 0
+                ? 'bg-white/80 border border-sakura-100 text-gray-600'
+                : 'bg-gradient-to-r from-sakura-400 to-sakura-500 text-white shadow-lg shadow-sakura-200'
+            }`}>
+              ホームに戻る
+            </button>
+          </Link>
+        </div>
       </main>
     );
   }
 
   const currentProblem = problems[currentIndex];
+  const isAnswered = results[currentProblem.id] !== undefined;
 
   return (
     <main className="pt-6">
@@ -201,15 +238,35 @@ export default function DrillPage() {
 
       {/* Progress */}
       <div className="mb-5">
-        <ProgressBar current={currentIndex} total={problems.length} />
+        <ProgressBar current={Object.keys(results).length} total={problems.length} />
       </div>
 
       {/* Question Card */}
       <DrillCard
         key={currentProblem.id}
         problem={currentProblem}
-        onEvaluate={handleEvaluate}
+        onEvaluate={isAnswered ? undefined : handleEvaluate}
+        alreadyAnswered={isAnswered}
+        previousQuality={results[currentProblem.id]}
       />
+
+      {/* Previous / Next navigation */}
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={() => goTo(currentIndex - 1)}
+          disabled={currentIndex === 0}
+          className="px-4 py-2 text-sm text-gray-500 bg-white/80 border border-gray-200 rounded-xl disabled:opacity-30 active:scale-[0.95] transition-transform"
+        >
+          ← 前の問題
+        </button>
+        <button
+          onClick={() => goTo(currentIndex + 1)}
+          disabled={currentIndex >= problems.length - 1}
+          className="px-4 py-2 text-sm text-gray-500 bg-white/80 border border-gray-200 rounded-xl disabled:opacity-30 active:scale-[0.95] transition-transform"
+        >
+          次の問題 →
+        </button>
+      </div>
 
       {/* Bloom animation overlay */}
       {showBloomAnimation && (

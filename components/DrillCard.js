@@ -4,13 +4,13 @@ import { useState } from 'react';
 import TagBadge from './TagBadge';
 import FigureDisplay from './FigureDisplay';
 
-export default function DrillCard({ problem, onEvaluate }) {
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [evaluated, setEvaluated] = useState(false);
+export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previousQuality }) {
+  const [showAnswer, setShowAnswer] = useState(alreadyAnswered || false);
+  const [evaluated, setEvaluated] = useState(alreadyAnswered || false);
 
   const handleEvaluate = (quality) => {
     setEvaluated(true);
-    onEvaluate(quality);
+    if (onEvaluate) onEvaluate(quality);
   };
 
   return (
@@ -100,6 +100,15 @@ export default function DrillCard({ problem, onEvaluate }) {
                   </span>
                 </button>
               </div>
+            </div>
+          )}
+
+          {/* Already answered indicator */}
+          {alreadyAnswered && previousQuality !== undefined && (
+            <div className="mt-4 text-center">
+              <span className="text-sm text-gray-400">
+                回答済み: {previousQuality === 5 ? '🌸 できた' : previousQuality === 3 ? '🤔 あやしい' : '😢 わからなかった'}
+              </span>
             </div>
           )}
         </div>

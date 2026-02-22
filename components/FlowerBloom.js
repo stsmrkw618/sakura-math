@@ -5,16 +5,16 @@ export default function FlowerBloom({ x, y, bloomed, index }) {
     // 蕾（つぼみ）
     return (
       <g transform={`translate(${x}, ${y})`}>
-        <circle r="3" fill="#86EFAC" opacity="0.7" />
-        <circle r="1.5" fill="#4ADE80" />
+        <circle r="4" fill="#86EFAC" opacity="0.7" />
+        <circle r="2.5" fill="#4ADE80" />
       </g>
     );
   }
 
   // 開花した花（5枚花弁 + 中央）
   const petalCount = 5;
-  const petalRadius = 4.5;
-  const centerOffset = 6;
+  const petalRadius = 7;
+  const centerOffset = 9;
 
   return (
     <g
@@ -40,7 +40,7 @@ export default function FlowerBloom({ x, y, bloomed, index }) {
           />
         );
       })}
-      <circle r="3" fill="#FBBF24" />
+      <circle r="4" fill="#FBBF24" />
     </g>
   );
 }

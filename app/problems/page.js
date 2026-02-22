@@ -13,6 +13,7 @@ export default function ProblemsPage() {
   const [tags, setTags] = useState([]);
   const [selectedTag, setSelectedTag] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
+  const [showAnswerId, setShowAnswerId] = useState(null);
   const [progress, setProgress] = useState(null);
 
   useEffect(() => {
@@ -119,12 +120,15 @@ export default function ProblemsPage() {
             >
               {/* Card Header (tappable) */}
               <button
-                onClick={() => setExpandedId(expanded ? null : problem.id)}
+                onClick={() => {
+                  setExpandedId(expanded ? null : problem.id);
+                  if (expanded) setShowAnswerId(null);
+                }}
                 className="w-full p-4 text-left"
               >
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-700 line-clamp-2 leading-relaxed">
+                    <p className={`text-sm text-gray-700 leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}>
                       {problem.question}
                     </p>
                     <div className="flex items-center gap-1.5 mt-2 flex-wrap">
@@ -151,7 +155,7 @@ export default function ProblemsPage() {
                 </div>
               </button>
 
-              {/* Expanded Detail */}
+              {/* Step 1: Expanded - full question + figure + source */}
               {expanded && (
                 <div className="px-4 pb-4 border-t border-gray-100 pt-3 animate-fade-in">
                   {/* Source and test rate */}
@@ -165,46 +169,61 @@ export default function ProblemsPage() {
                   {/* Figure */}
                   <FigureDisplay figure={problem.figure} />
 
-                  {/* Answer */}
-                  <div className="bg-emerald-50 rounded-xl p-3 mb-3">
-                    <p className="text-xs font-bold text-emerald-700 mb-1">答え</p>
-                    <p className="text-sm text-gray-700 whitespace-pre-line">
-                      {problem.answer}
-                    </p>
-                  </div>
-
-                  {/* Stumbling Point */}
-                  {problem.stumblingPoint && (
-                    <div className="bg-yellow-50 rounded-xl p-3 mb-3">
-                      <p className="text-xs font-bold text-yellow-700 mb-1">
-                        つまずきポイント
-                      </p>
-                      <p className="text-sm text-gray-700">
-                        💡 {problem.stumblingPoint}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Review History */}
-                  {history.length > 0 && (
-                    <div className="bg-gray-50 rounded-xl p-3">
-                      <p className="text-xs font-bold text-gray-500 mb-2">
-                        復習履歴 ({history.length}回)
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {history.map((entry, i) => (
-                          <span
-                            key={i}
-                            className="text-lg"
-                            title={new Date(entry.date).toLocaleDateString('ja-JP')}
-                          >
-                            {entry.quality === 5 ? '🌸' : entry.quality === 3 ? '🤔' : '😢'}
-                          </span>
-                        ))}
+                  {/* Step 2: Show answer button or answer content */}
+                  {showAnswerId !== problem.id ? (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowAnswerId(problem.id);
+                      }}
+                      className="w-full py-2.5 bg-white border-2 border-dashed border-sakura-200 rounded-xl text-sakura-500 font-bold text-sm active:scale-[0.98] transition-transform"
+                    >
+                      解説を見る
+                    </button>
+                  ) : (
+                    <div className="animate-fade-in">
+                      {/* Answer */}
+                      <div className="bg-emerald-50 rounded-xl p-3 mb-3">
+                        <p className="text-xs font-bold text-emerald-700 mb-1">答え</p>
+                        <p className="text-sm text-gray-700 whitespace-pre-line">
+                          {problem.answer}
+                        </p>
                       </div>
-                      <p className="text-xs text-gray-400 mt-2">
-                        最後の復習: {new Date(history[history.length - 1].date).toLocaleDateString('ja-JP')}
-                      </p>
+
+                      {/* Stumbling Point */}
+                      {problem.stumblingPoint && (
+                        <div className="bg-yellow-50 rounded-xl p-3 mb-3">
+                          <p className="text-xs font-bold text-yellow-700 mb-1">
+                            つまずきポイント
+                          </p>
+                          <p className="text-sm text-gray-700">
+                            💡 {problem.stumblingPoint}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Review History */}
+                      {history.length > 0 && (
+                        <div className="bg-gray-50 rounded-xl p-3">
+                          <p className="text-xs font-bold text-gray-500 mb-2">
+                            復習履歴 ({history.length}回)
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {history.map((entry, i) => (
+                              <span
+                                key={i}
+                                className="text-lg"
+                                title={new Date(entry.date).toLocaleDateString('ja-JP')}
+                              >
+                                {entry.quality === 5 ? '🌸' : entry.quality === 3 ? '🤔' : '😢'}
+                              </span>
+                            ))}
+                          </div>
+                          <p className="text-xs text-gray-400 mt-2">
+                            最後の復習: {new Date(history[history.length - 1].date).toLocaleDateString('ja-JP')}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
