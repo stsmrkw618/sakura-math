@@ -2,11 +2,11 @@
 
 export default function FlowerBloom({ x, y, bloomed, index }) {
   if (!bloomed) {
-    // 蕾（つぼみ）— キャノピーに埋もれないよう濃い色で大きめに
+    // 蕾（つぼみ）
     return (
       <g transform={`translate(${x}, ${y})`}>
-        <circle r="6" fill="#86EFAC" opacity="0.8" />
-        <circle r="3.5" fill="#4ADE80" />
+        <circle r="8" fill="#86EFAC" opacity="0.8" />
+        <circle r="5" fill="#4ADE80" />
       </g>
     );
   }
@@ -14,8 +14,8 @@ export default function FlowerBloom({ x, y, bloomed, index }) {
   // 開花した花（5枚花弁 + 中央）
   // 外側の<g>で位置決め、内側の<g>でアニメーション（CSS transformがSVG transformを上書きしないように分離）
   const petalCount = 5;
-  const petalRadius = 12;
-  const centerOffset = 14;
+  const petalRadius = 18;
+  const centerOffset = 20;
 
   return (
     <g transform={`translate(${x}, ${y})`}>
@@ -41,7 +41,7 @@ export default function FlowerBloom({ x, y, bloomed, index }) {
             />
           );
         })}
-        <circle r="5" fill="#FBBF24" />
+        <circle r="7" fill="#FBBF24" />
       </g>
     </g>
   );

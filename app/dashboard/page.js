@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import TagBadge from '../../components/TagBadge';
+import FigureDisplay from '../../components/FigureDisplay';
 import { getAllProblems, getCorrectRateColor, getCorrectRateBg } from '../../lib/problems';
 import { loadProgress } from '../../lib/storage';
 
@@ -11,6 +12,7 @@ export default function DashboardPage() {
   const [tagStats, setTagStats] = useState([]);
   const [summary, setSummary] = useState({ total: 0, totalAnswers: 0, overallRate: 0 });
   const [weakPoints, setWeakPoints] = useState([]);
+  const [expandedId, setExpandedId] = useState(null);
 
   useEffect(() => {
     const problems = getAllProblems();
@@ -61,6 +63,7 @@ export default function DashboardPage() {
       .map((p) => ({
         id: p.id,
         question: p.question,
+        figure: p.figure || null,
         stumblingPoint: p.stumblingPoint,
         tags: p.tags,
         rate: (() => {
@@ -163,31 +166,38 @@ export default function DashboardPage() {
           </p>
         ) : (
           <div className="space-y-3">
-            {weakPoints.map((p) => (
-              <div
-                key={p.id}
-                className={`rounded-xl p-3 border ${
-                  p.rate !== null ? getCorrectRateBg(p.rate) : 'bg-gray-50'
-                } border-gray-100`}
-              >
-                <p className="text-xs text-gray-500 line-clamp-1 mb-1">
-                  {p.question}
-                </p>
-                <p className="text-sm text-gray-700">
-                  💡 {p.stumblingPoint}
-                </p>
-                <div className="flex items-center gap-1.5 mt-2">
-                  {p.tags.map((t) => (
-                    <TagBadge key={t} tag={t} />
-                  ))}
-                  {p.rate !== null && (
-                    <span className={`text-xs font-bold ml-auto ${getCorrectRateColor(p.rate)}`}>
-                      {p.rate}%
-                    </span>
+            {weakPoints.map((p) => {
+              const isExpanded = expandedId === p.id;
+              return (
+                <div
+                  key={p.id}
+                  onClick={() => setExpandedId(isExpanded ? null : p.id)}
+                  className={`rounded-xl p-3 border cursor-pointer transition-colors ${
+                    p.rate !== null ? getCorrectRateBg(p.rate) : 'bg-gray-50'
+                  } border-gray-100 active:scale-[0.99]`}
+                >
+                  <p className={`text-xs text-gray-500 mb-1 ${isExpanded ? '' : 'line-clamp-1'}`}>
+                    {p.question}
+                  </p>
+                  {isExpanded && p.figure && (
+                    <FigureDisplay figure={p.figure} />
                   )}
+                  <p className="text-sm text-gray-700">
+                    💡 {p.stumblingPoint}
+                  </p>
+                  <div className="flex items-center gap-1.5 mt-2">
+                    {p.tags.map((t) => (
+                      <TagBadge key={t} tag={t} />
+                    ))}
+                    {p.rate !== null && (
+                      <span className={`text-xs font-bold ml-auto ${getCorrectRateColor(p.rate)}`}>
+                        {p.rate}%
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

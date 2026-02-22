@@ -103,7 +103,7 @@ export default function Home() {
     if (!window.confirm('すべての進捗データをリセットしますか？\nこの操作は取り消せません。')) return;
     const defaultProgress = {
       reviews: {},
-      sakura: { totalBlooms: 0, currentTreeBlooms: 0, fullBloomCount: 0, fullBloomThreshold: 30 },
+      sakura: { totalBlooms: 0, currentTreeBlooms: 0, fullBloomCount: 0, fullBloomThreshold: 11 },
       streak: { currentStreak: 0, lastActiveDate: null, longestStreak: 0 },
     };
     saveProgress(defaultProgress);
@@ -228,7 +228,7 @@ export default function Home() {
             className="w-full py-4 bg-gradient-to-r from-sakura-400 to-sakura-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-sakura-200 active:scale-[0.98] transition-transform font-kiwi"
           >
             {dueIsDue ? (
-              <>ドリルを始める ({dueCount}問) 🌸</>
+              <>ドリルを始める 🌸</>
             ) : (
               <>もう一度チャレンジ 💪</>
             )}
@@ -241,7 +241,7 @@ export default function Home() {
               className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi"
             >
               {dueHLIsDue ? (
-                <>ハイレベル ({dueCountHL}問) 🔥</>
+                <>ハイレベル 🔥</>
               ) : (
                 <>ハイレベル もう一度 🔥</>
               )}
