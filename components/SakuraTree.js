@@ -34,47 +34,53 @@ const CANOPY_CLOUDS = [
 
 // 30 flower slots — each positioned INSIDE canopy clouds above
 const FLOWER_SLOTS = [
-  // Top crown (5)
-  { x: 150, y: 78 },
-  { x: 136, y: 88 },
-  { x: 166, y: 82 },
-  { x: 126, y: 92 },
-  { x: 174, y: 80 },
-  // Upper left (4)
-  { x: 70, y: 124 },
-  { x: 58, y: 132 },
-  { x: 84, y: 118 },
-  { x: 62, y: 138 },
-  // Upper right (4)
-  { x: 230, y: 124 },
-  { x: 242, y: 132 },
-  { x: 216, y: 118 },
-  { x: 238, y: 138 },
-  // Middle left (4)
-  { x: 82, y: 176 },
-  { x: 68, y: 186 },
-  { x: 96, y: 168 },
-  { x: 60, y: 194 },
-  // Middle right (4)
-  { x: 218, y: 176 },
-  { x: 232, y: 186 },
-  { x: 204, y: 168 },
-  { x: 240, y: 194 },
-  // Center (3)
-  { x: 150, y: 138 },
-  { x: 140, y: 148 },
-  { x: 160, y: 148 },
-  // Lower left (3)
-  { x: 56, y: 210 },
-  { x: 48, y: 220 },
-  { x: 70, y: 216 },
-  // Lower right (3)
-  { x: 244, y: 210 },
-  { x: 252, y: 220 },
-  { x: 230, y: 216 },
+  /* 0 */ { x: 150, y: 78 },   // Top crown
+  /* 1 */ { x: 136, y: 88 },   // Top crown
+  /* 2 */ { x: 166, y: 82 },   // Top crown
+  /* 3 */ { x: 126, y: 92 },   // Top crown
+  /* 4 */ { x: 174, y: 80 },   // Top crown
+  /* 5 */ { x: 70, y: 124 },   // Upper left
+  /* 6 */ { x: 58, y: 132 },   // Upper left
+  /* 7 */ { x: 84, y: 118 },   // Upper left
+  /* 8 */ { x: 62, y: 138 },   // Upper left
+  /* 9 */ { x: 230, y: 124 },  // Upper right
+  /*10 */ { x: 242, y: 132 },  // Upper right
+  /*11 */ { x: 216, y: 118 },  // Upper right
+  /*12 */ { x: 238, y: 138 },  // Upper right
+  /*13 */ { x: 82, y: 176 },   // Middle left
+  /*14 */ { x: 68, y: 186 },   // Middle left
+  /*15 */ { x: 96, y: 168 },   // Middle left
+  /*16 */ { x: 60, y: 194 },   // Middle left
+  /*17 */ { x: 218, y: 176 },  // Middle right
+  /*18 */ { x: 232, y: 186 },  // Middle right
+  /*19 */ { x: 204, y: 168 },  // Middle right
+  /*20 */ { x: 240, y: 194 },  // Middle right
+  /*21 */ { x: 150, y: 138 },  // Center
+  /*22 */ { x: 140, y: 148 },  // Center
+  /*23 */ { x: 160, y: 148 },  // Center
+  /*24 */ { x: 56, y: 210 },   // Lower left
+  /*25 */ { x: 48, y: 220 },   // Lower left
+  /*26 */ { x: 70, y: 216 },   // Lower left
+  /*27 */ { x: 244, y: 210 },  // Lower right
+  /*28 */ { x: 252, y: 220 },  // Lower right
+  /*29 */ { x: 230, y: 216 },  // Lower right
+];
+
+// Bloom order: cycles through all 8 regions so flowers spread evenly across the tree
+// Round 1: one per region (8), Round 2: one per region (8), Round 3: one per region (8),
+// Round 4: remaining from 5-slot regions (5), Round 5: last one (1) = total 30
+const BLOOM_ORDER = [
+  0, 5, 9, 13, 17, 21, 24, 27,   // Round 1: 1 from each region
+  1, 6, 10, 14, 18, 22, 25, 28,  // Round 2
+  2, 7, 11, 15, 19, 23, 26, 29,  // Round 3
+  3, 8, 12, 16, 20,              // Round 4: remaining slots
+  4,                              // Round 5: last top crown slot
 ];
 
 export default function SakuraTree({ bloomCount = 0 }) {
+  // Which slot indices are bloomed (distributed across regions via BLOOM_ORDER)
+  const bloomedSet = new Set(BLOOM_ORDER.slice(0, bloomCount));
+
   return (
     <svg viewBox="-20 55 340 315" className="w-full max-w-[340px] mx-auto">
       {/* Tree trunk */}
@@ -126,7 +132,7 @@ export default function SakuraTree({ bloomCount = 0 }) {
           key={i}
           x={slot.x}
           y={slot.y}
-          bloomed={i < bloomCount}
+          bloomed={bloomedSet.has(i)}
           index={i}
         />
       ))}
