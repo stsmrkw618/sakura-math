@@ -90,3 +90,21 @@ body {
 .animate-combo-pulse {
   animation: comboPulse 0.3s ease-out;
 }
+
+@keyframes characterSlideIn {
+  0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes characterFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+.animate-character-in {
+  animation: characterSlideIn 0.4s ease-out forwards;
+}
+
+.animate-character-out {
+  animation: characterFadeOut 0.4s ease-in forwards;
+}

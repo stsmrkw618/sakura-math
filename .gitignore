@@ -34,6 +34,14 @@ yarn-error.log*
 # claude code
 .claude/
 
+# test paper photos & reference materials
+/problem/
+/ref/
+
+# character images (personal)
+/character/
+/public/character/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

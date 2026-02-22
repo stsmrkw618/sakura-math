@@ -24,6 +24,42 @@ const COMBO_MILESTONES = {
   10: '神！✨',
 };
 
+const CHARACTERS = [
+  { id: 'frieren', file: 'フリーレン.jpg', name: 'フリーレン' },
+  { id: 'fern', file: 'フェルン.png', name: 'フェルン' },
+  { id: 'stark', file: 'シュタルク.png', name: 'シュタルク' },
+];
+
+const CHARACTER_LINES = {
+  frieren: {
+    3: '…なかなかやりますね',
+    5: '…すごいです。少し見直しました',
+    8: '…天才かもしれません',
+    10: '…私の弟子にしてあげてもいいですよ',
+  },
+  fern: {
+    3: 'いい調子ですよ！',
+    5: 'すごいです！この調子です！',
+    8: '天才ですね！フリーレン様も驚きます！',
+    10: '完璧です！尊敬します！',
+  },
+  stark: {
+    3: 'やるじゃん！',
+    5: 'すげぇ！お、おれも負けてられない…！',
+    8: 'まじか…天才かよ！',
+    10: 'お、おれより強いんじゃ…！？',
+  },
+};
+
+function getCharacterLine(characterId, combo) {
+  const lines = CHARACTER_LINES[characterId];
+  let line = null;
+  for (const [threshold, text] of Object.entries(lines)) {
+    if (combo >= Number(threshold)) line = text;
+  }
+  return line;
+}
+
 function getComboText(combo) {
   // Find highest milestone <= combo
   let text = null;
@@ -44,6 +80,7 @@ export default function FlashcardsPage() {
   const [showComboAnim, setShowComboAnim] = useState(false);
   const [comboText, setComboText] = useState(null);
   const [showBloomAnimation, setShowBloomAnimation] = useState(false);
+  const [characterPopup, setCharacterPopup] = useState(null); // { character, line, combo, fadingOut }
   const [allMastered, setAllMastered] = useState(false);
   const [progressRef, setProgressRef] = useState(null);
 
@@ -84,6 +121,17 @@ export default function FlashcardsPage() {
       setComboText(milestone);
       setShowComboAnim(true);
       setTimeout(() => setShowComboAnim(false), 600);
+
+      // Character popup
+      const char = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
+      const line = getCharacterLine(char.id, newCombo);
+      setCharacterPopup({ character: char, line, combo: newCombo, fadingOut: false });
+      setTimeout(() => {
+        setCharacterPopup((prev) => prev ? { ...prev, fadingOut: true } : null);
+      }, 1600);
+      setTimeout(() => {
+        setCharacterPopup(null);
+      }, 2000);
     }
 
     // Update progress
@@ -326,6 +374,29 @@ export default function FlashcardsPage() {
         onCorrect={handleCorrect}
         onIncorrect={handleIncorrect}
       />
+
+      {/* Character popup overlay */}
+      {characterPopup && (
+        <div className="fixed inset-x-0 bottom-24 flex justify-center pointer-events-none z-50">
+          <div className={`flex items-center gap-3 bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-lg border border-purple-100 max-w-xs ${
+            characterPopup.fadingOut ? 'animate-character-out' : 'animate-character-in'
+          }`}>
+            <img
+              src={`/character/${characterPopup.character.file}`}
+              alt={characterPopup.character.name}
+              className="w-14 h-14 rounded-full object-cover border-2 border-purple-200 flex-shrink-0"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+            <div className="min-w-0">
+              <p className="text-xs text-purple-400 font-bold">{characterPopup.character.name}</p>
+              <p className="text-sm text-gray-700 font-medium leading-snug">
+                「{characterPopup.line}」
+              </p>
+              <p className="text-xs text-warm-orange font-bold mt-0.5">🔥{characterPopup.combo}コンボ！</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bloom animation overlay */}
       {showBloomAnimation && (
