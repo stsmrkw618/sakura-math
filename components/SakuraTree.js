@@ -113,29 +113,17 @@ export default function SakuraTree({ bloomCount = 0 }) {
       <path d="M148,120 Q130,100 120,85" stroke="#A0781E" strokeWidth="2" fill="none" strokeLinecap="round" />
       <path d="M148,120 Q165,95 175,80" stroke="#A0781E" strokeWidth="2" fill="none" strokeLinecap="round" />
 
-      {/* Canopy foliage — soft cloud shapes covering branch tips */}
-      {CANOPY_CLOUDS.map((cloud, i) => (
-        <ellipse
-          key={`c-${i}`}
-          cx={cloud.cx}
-          cy={cloud.cy}
-          rx={cloud.rx}
-          ry={cloud.ry}
-          fill="#BBF7D0"
-          opacity="0.25"
-        />
-      ))}
-
-      {/* Flowers / buds (on top of canopy) */}
-      {FLOWER_SLOTS.map((slot, i) => (
-        <FlowerBloom
-          key={i}
-          x={slot.x}
-          y={slot.y}
-          bloomed={bloomedSet.has(i)}
-          index={i}
-        />
-      ))}
+      {/* Buds first (behind), then bloomed flowers (in front) */}
+      {FLOWER_SLOTS.map((slot, i) =>
+        !bloomedSet.has(i) && (
+          <FlowerBloom key={i} x={slot.x} y={slot.y} bloomed={false} index={i} />
+        )
+      )}
+      {FLOWER_SLOTS.map((slot, i) =>
+        bloomedSet.has(i) && (
+          <FlowerBloom key={`b-${i}`} x={slot.x} y={slot.y} bloomed={true} index={i} />
+        )
+      )}
 
       {/* Ground */}
       <ellipse cx="150" cy="355" rx="120" ry="10" fill="#86EFAC" opacity="0.2" />
