@@ -12,6 +12,7 @@ export default function DrillPage() {
   const [loading, setLoading] = useState(true);
   const [problems, setProblems] = useState([]);
   const [totalDue, setTotalDue] = useState(0);
+  const [isPractice, setIsPractice] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [results, setResults] = useState({});
   const [done, setDone] = useState(false);
@@ -26,8 +27,9 @@ export default function DrillPage() {
 
     const progress = loadProgress();
     const allProblems = getAllProblems();
-    const due = getDueProblems(allProblems, progress.reviews, { mode: m });
+    const { problems: due, isDue } = getDueProblems(allProblems, progress.reviews, { mode: m });
     setTotalDue(due.length);
+    setIsPractice(!isDue);
 
     // バッチ選択（5〜10問、大問グループ単位でシャッフル）
     const batch = selectBatch(due);
@@ -225,6 +227,11 @@ export default function DrillPage() {
           ← 戻る
         </Link>
         <div className="flex items-center gap-2">
+          {isPractice && (
+            <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-200">
+              れんしゅう💪
+            </span>
+          )}
           {mode === 'highlevel' && (
             <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200">
               ハイレベル🔥

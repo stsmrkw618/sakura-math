@@ -12,7 +12,9 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(null);
   const [dueCount, setDueCount] = useState(0);
+  const [dueIsDue, setDueIsDue] = useState(true);
   const [dueCountHL, setDueCountHL] = useState(0);
+  const [dueHLIsDue, setDueHLIsDue] = useState(true);
   const [showFullBloom, setShowFullBloom] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [importJson, setImportJson] = useState('');
@@ -26,9 +28,11 @@ export default function Home() {
 
     const problems = getAllProblems();
     const due = getDueProblems(problems, p.reviews, { mode: 'normal' });
-    setDueCount(due.length);
+    setDueCount(due.problems.length);
+    setDueIsDue(due.isDue);
     const dueHL = getDueProblems(problems, p.reviews, { mode: 'highlevel' });
-    setDueCountHL(dueHL.length);
+    setDueCountHL(dueHL.problems.length);
+    setDueHLIsDue(dueHL.isDue);
 
     setLoading(false);
   }, []);
@@ -77,8 +81,12 @@ export default function Home() {
 
       // Refresh due counts
       const problems = getAllProblems();
-      setDueCount(getDueProblems(problems, currentProgress.reviews, { mode: 'normal' }).length);
-      setDueCountHL(getDueProblems(problems, currentProgress.reviews, { mode: 'highlevel' }).length);
+      const r1 = getDueProblems(problems, currentProgress.reviews, { mode: 'normal' });
+      setDueCount(r1.problems.length);
+      setDueIsDue(r1.isDue);
+      const r2 = getDueProblems(problems, currentProgress.reviews, { mode: 'highlevel' });
+      setDueCountHL(r2.problems.length);
+      setDueHLIsDue(r2.isDue);
     } catch (e) {
       setImportStatus({ type: 'error', message: `エラー: ${e.message}` });
     }
@@ -101,8 +109,12 @@ export default function Home() {
     saveProgress(defaultProgress);
     setProgress(defaultProgress);
     const allProblems = getAllProblems();
-    setDueCount(getDueProblems(allProblems, {}, { mode: 'normal' }).length);
-    setDueCountHL(getDueProblems(allProblems, {}, { mode: 'highlevel' }).length);
+    const r1 = getDueProblems(allProblems, {}, { mode: 'normal' });
+    setDueCount(r1.problems.length);
+    setDueIsDue(r1.isDue);
+    const r2 = getDueProblems(allProblems, {}, { mode: 'highlevel' });
+    setDueCountHL(r2.problems.length);
+    setDueHLIsDue(r2.isDue);
     setImportStatus({ type: 'success', message: 'リセットしました' });
   };
 
@@ -146,11 +158,6 @@ export default function Home() {
           SAKURA Math
         </h1>
         <p className="text-sm text-gray-500 mt-1">さくら算数ドリル</p>
-        {sakura.fullBloomCount > 0 && (
-          <p className="text-xs text-sakura-300 mt-0.5">
-            {treeGeneration}本目のさくら
-          </p>
-        )}
       </div>
 
       {/* Sakura Tree */}
@@ -181,7 +188,9 @@ export default function Home() {
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500">さくらの花</p>
+              <p className="text-sm text-gray-500">
+                {treeGeneration}本目のさくら
+              </p>
               <p className="text-lg font-bold text-sakura-500 font-kiwi">
                 {sakura.currentTreeBlooms}個 / {threshold}個
               </p>
@@ -198,6 +207,17 @@ export default function Home() {
               style={{ width: `${(sakura.currentTreeBlooms / threshold) * 100}%` }}
             />
           </div>
+          {/* Past full bloom trees */}
+          {sakura.fullBloomCount > 0 && (
+            <div className="mt-3 pt-3 border-t border-pink-100">
+              <p className="text-xs text-gray-400 mb-1.5">満開にしたさくら</p>
+              <div className="flex gap-1 flex-wrap">
+                {Array.from({ length: sakura.fullBloomCount }).map((_, i) => (
+                  <span key={i} className="text-lg" title={`${i + 1}本目`}>🌸</span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -206,12 +226,11 @@ export default function Home() {
         <Link href="/drill" className="block">
           <button
             className="w-full py-4 bg-gradient-to-r from-sakura-400 to-sakura-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-sakura-200 active:scale-[0.98] transition-transform font-kiwi"
-            disabled={dueCount === 0}
           >
-            {dueCount > 0 ? (
+            {dueIsDue ? (
               <>ドリルを始める ({dueCount}問) 🌸</>
             ) : (
-              <>今日の復習は終わり！🎉</>
+              <>もう一度チャレンジ ({dueCount}問) 💪</>
             )}
           </button>
         </Link>
@@ -221,8 +240,10 @@ export default function Home() {
             className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi disabled:opacity-40"
             disabled={dueCountHL === 0}
           >
-            {dueCountHL > 0 ? (
+            {dueHLIsDue ? (
               <>ハイレベル ({dueCountHL}問) 🔥</>
+            ) : dueCountHL > 0 ? (
+              <>ハイレベル もう一度 ({dueCountHL}問) 💪</>
             ) : (
               <>ハイレベル問題なし</>
             )}
