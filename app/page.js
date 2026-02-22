@@ -235,20 +235,15 @@ export default function Home() {
           </button>
         </Link>
 
-        <Link href="/drill?mode=highlevel" className="block">
-          <button
-            className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi disabled:opacity-40"
-            disabled={dueCountHL === 0}
-          >
-            {dueHLIsDue ? (
-              <>ハイレベル ({dueCountHL}問) 🔥</>
-            ) : dueCountHL > 0 ? (
-              <>ハイレベル もう一度 ({dueCountHL}問) 💪</>
-            ) : (
-              <>ハイレベル問題なし</>
-            )}
-          </button>
-        </Link>
+        {dueHLIsDue && dueCountHL > 0 && (
+          <Link href="/drill?mode=highlevel" className="block">
+            <button
+              className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi"
+            >
+              ハイレベル ({dueCountHL}問) 🔥
+            </button>
+          </Link>
+        )}
 
         <div className="grid grid-cols-2 gap-3">
           <Link href="/dashboard" className="block">
