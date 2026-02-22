@@ -45,23 +45,23 @@ const FLOWER_SLOTS = [
 
 export default function SakuraTree({ bloomCount = 0 }) {
   return (
-    <svg viewBox="0 0 300 400" className="w-full max-w-[280px] mx-auto">
+    <svg viewBox="-20 10 340 350" className="w-full max-w-[340px] mx-auto">
       {/* Sky / background area */}
 
       {/* Tree trunk */}
       <path
-        d="M145,380 L140,300 Q135,260 130,230 Q140,200 150,180 Q160,200 170,230 Q165,260 160,300 L155,380 Z"
+        d="M145,345 L140,290 Q135,260 130,230 Q140,200 150,180 Q160,200 170,230 Q165,260 160,290 L155,345 Z"
         fill="#8B6914"
         stroke="#6B4E12"
         strokeWidth="1"
       />
 
       {/* Trunk texture lines */}
-      <path d="M148,380 Q146,320 147,250" stroke="#6B4E12" strokeWidth="0.5" fill="none" opacity="0.4" />
-      <path d="M152,380 Q154,330 152,260" stroke="#6B4E12" strokeWidth="0.5" fill="none" opacity="0.4" />
+      <path d="M148,345 Q146,310 147,250" stroke="#6B4E12" strokeWidth="0.5" fill="none" opacity="0.4" />
+      <path d="M152,345 Q154,320 152,260" stroke="#6B4E12" strokeWidth="0.5" fill="none" opacity="0.4" />
 
       {/* Root base */}
-      <ellipse cx="150" cy="382" rx="25" ry="6" fill="#6B4E12" opacity="0.3" />
+      <ellipse cx="150" cy="348" rx="25" ry="6" fill="#6B4E12" opacity="0.3" />
 
       {/* Main branches */}
       {/* Left upper branch */}
@@ -125,7 +125,7 @@ export default function SakuraTree({ bloomCount = 0 }) {
       ))}
 
       {/* Ground */}
-      <ellipse cx="150" cy="390" rx="120" ry="10" fill="#86EFAC" opacity="0.2" />
+      <ellipse cx="150" cy="355" rx="120" ry="10" fill="#86EFAC" opacity="0.2" />
     </svg>
   );
 }
