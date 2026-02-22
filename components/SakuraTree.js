@@ -2,50 +2,50 @@
 
 import FlowerBloom from './FlowerBloom';
 
-// 30 flower slot positions on the tree
+// 30 flower slot positions on the tree (positioned near branch tips)
 const FLOWER_SLOTS = [
-  // Top crown
-  { x: 150, y: 45 },
-  { x: 130, y: 55 },
-  { x: 170, y: 55 },
-  { x: 140, y: 35 },
-  { x: 160, y: 38 },
-  // Upper left branch
-  { x: 85, y: 75 },
-  { x: 70, y: 85 },
-  { x: 95, y: 65 },
-  { x: 60, y: 95 },
-  { x: 78, y: 60 },
-  // Upper right branch
-  { x: 215, y: 75 },
-  { x: 230, y: 85 },
-  { x: 205, y: 65 },
-  { x: 240, y: 95 },
-  { x: 222, y: 60 },
-  // Middle left
-  { x: 100, y: 105 },
-  { x: 80, y: 115 },
-  { x: 110, y: 95 },
-  { x: 65, y: 125 },
-  // Middle right
-  { x: 200, y: 105 },
-  { x: 220, y: 115 },
-  { x: 190, y: 95 },
-  { x: 235, y: 125 },
-  // Middle center
-  { x: 135, y: 90 },
-  { x: 165, y: 90 },
-  { x: 150, y: 75 },
-  // Lower branches
-  { x: 90, y: 140 },
-  { x: 210, y: 140 },
-  { x: 120, y: 130 },
-  { x: 180, y: 130 },
+  // Top crown (near top branch tip ~y=80)
+  { x: 150, y: 76 },
+  { x: 135, y: 85 },
+  { x: 165, y: 82 },
+  { x: 122, y: 88 },
+  { x: 175, y: 78 },
+  // Upper left branch (tips ~y=120-135)
+  { x: 78, y: 118 },
+  { x: 62, y: 130 },
+  { x: 92, y: 112 },
+  { x: 55, y: 138 },
+  { x: 85, y: 125 },
+  // Upper right branch (tips ~y=120-135)
+  { x: 222, y: 118 },
+  { x: 238, y: 130 },
+  { x: 208, y: 112 },
+  { x: 245, y: 138 },
+  { x: 215, y: 125 },
+  // Middle left (along branch ~y=160-200)
+  { x: 95, y: 168 },
+  { x: 78, y: 182 },
+  { x: 108, y: 158 },
+  { x: 58, y: 195 },
+  // Middle right (along branch ~y=160-200)
+  { x: 205, y: 168 },
+  { x: 222, y: 182 },
+  { x: 192, y: 158 },
+  { x: 242, y: 195 },
+  // Center (along main trunk upper ~y=120-140)
+  { x: 140, y: 140 },
+  { x: 160, y: 140 },
+  { x: 150, y: 118 },
+  // Lower branches (near tips ~y=210-225)
+  { x: 55, y: 215 },
+  { x: 245, y: 215 },
+  { x: 75, y: 225 },
+  { x: 225, y: 225 },
 ];
 
 export default function SakuraTree({ bloomCount = 0 }) {
   return (
-    <svg viewBox="-20 10 340 350" className="w-full max-w-[340px] mx-auto">
+    <svg viewBox="-20 55 340 315" className="w-full max-w-[340px] mx-auto">
       {/* Sky / background area */}
 
       {/* Tree trunk */}
