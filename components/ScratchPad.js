@@ -5,13 +5,15 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 export default function ScratchPad() {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
-  const isDrawingRef = useRef(false);
-  const hasContentRef = useRef(false);
   const [hasContent, setHasContent] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const lastPoint = useRef(null);
-  const rafId = useRef(null);
-  const pendingPoints = useRef([]);
+  const stateRef = useRef({
+    isDrawing: false,
+    hasContent: false,
+    lastX: 0,
+    lastY: 0,
+    canvasRect: null,
+  });
 
   const COLLAPSED_HEIGHT = 200;
   const EXPANDED_HEIGHT = 400;
@@ -21,19 +23,16 @@ export default function ScratchPad() {
     ctx.strokeStyle = '#e5e7eb';
     ctx.lineWidth = 0.5;
     const gridSize = 20;
-
+    ctx.beginPath();
     for (let x = gridSize; x < width; x += gridSize) {
-      ctx.beginPath();
       ctx.moveTo(x, 0);
       ctx.lineTo(x, height);
-      ctx.stroke();
     }
     for (let y = gridSize; y < height; y += gridSize) {
-      ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(width, y);
-      ctx.stroke();
     }
+    ctx.stroke();
     ctx.restore();
   }, []);
 
@@ -53,116 +52,99 @@ export default function ScratchPad() {
 
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
-
     drawGrid(ctx, rect.width, height);
+
+    // Cache rect for fast coordinate calculation
+    stateRef.current.canvasRect = canvas.getBoundingClientRect();
   }, [isExpanded, drawGrid]);
+
+  // Attach native pointer events directly (bypasses React synthetic events)
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const s = stateRef.current;
+
+    const onPointerDown = (e) => {
+      if (e.pointerType === 'touch') return;
+      e.preventDefault();
+      canvas.setPointerCapture(e.pointerId);
+
+      s.canvasRect = canvas.getBoundingClientRect();
+      s.isDrawing = true;
+      s.lastX = e.clientX - s.canvasRect.left;
+      s.lastY = e.clientY - s.canvasRect.top;
+
+      // Draw initial dot
+      const pressure = e.pressure || 0.5;
+      ctx.beginPath();
+      ctx.arc(s.lastX, s.lastY, Math.max(0.8, pressure * 2), 0, Math.PI * 2);
+      ctx.fillStyle = '#374151';
+      ctx.fill();
+    };
+
+    const onPointerMove = (e) => {
+      if (!s.isDrawing || e.pointerType === 'touch') return;
+      e.preventDefault();
+
+      const rect = s.canvasRect;
+      ctx.strokeStyle = '#374151';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Use coalesced events for smoother Apple Pencil strokes
+      const events = e.getCoalescedEvents ? e.getCoalescedEvents() : null;
+      const points = (events && events.length > 0) ? events : [e];
+
+      for (let i = 0; i < points.length; i++) {
+        const pt = points[i];
+        const x = pt.clientX - rect.left;
+        const y = pt.clientY - rect.top;
+        const pressure = pt.pressure || 0.5;
+
+        ctx.beginPath();
+        ctx.moveTo(s.lastX, s.lastY);
+        ctx.lineTo(x, y);
+        ctx.lineWidth = Math.max(1.2, pressure * 3.5);
+        ctx.stroke();
+
+        s.lastX = x;
+        s.lastY = y;
+      }
+
+      if (!s.hasContent) {
+        s.hasContent = true;
+        setHasContent(true);
+      }
+    };
+
+    const onPointerUp = (e) => {
+      if (!s.isDrawing) return;
+      s.isDrawing = false;
+    };
+
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointerleave', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerUp);
+
+    return () => {
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('pointerup', onPointerUp);
+      canvas.removeEventListener('pointerleave', onPointerUp);
+      canvas.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [isExpanded]);
 
   useEffect(() => {
     setupCanvas();
-
     const handleResize = () => setupCanvas();
     window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, [setupCanvas]);
-
-  // Reject touch (palm) — only allow pen and mouse
-  const isAllowedInput = (e) => {
-    return e.pointerType === 'pen' || e.pointerType === 'mouse';
-  };
-
-  const getPoint = (e) => {
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      pressure: e.pressure || 0.5,
-    };
-  };
-
-  const flushPoints = useCallback(() => {
-    const ctx = canvasRef.current?.getContext('2d');
-    if (!ctx) return;
-
-    const points = pendingPoints.current;
-    if (points.length === 0) return;
-
-    ctx.strokeStyle = '#374151';
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    for (const seg of points) {
-      ctx.beginPath();
-      ctx.moveTo(seg.from.x, seg.from.y);
-      ctx.lineTo(seg.to.x, seg.to.y);
-      ctx.lineWidth = Math.max(1.2, seg.to.pressure * 3.5);
-      ctx.stroke();
-    }
-
-    pendingPoints.current = [];
-    rafId.current = null;
-  }, []);
-
-  const startDrawing = (e) => {
-    if (!isAllowedInput(e)) return;
-    e.preventDefault();
-    isDrawingRef.current = true;
-
-    const point = getPoint(e);
-    lastPoint.current = point;
-
-    // Draw initial dot
-    const ctx = canvasRef.current.getContext('2d');
-    ctx.beginPath();
-    ctx.arc(point.x, point.y, Math.max(0.8, point.pressure * 2), 0, Math.PI * 2);
-    ctx.fillStyle = '#374151';
-    ctx.fill();
-  };
-
-  const draw = (e) => {
-    if (!isDrawingRef.current || !isAllowedInput(e)) return;
-    e.preventDefault();
-
-    const prev = lastPoint.current;
-    if (!prev) return;
-
-    // Use coalesced events for smoother Apple Pencil strokes
-    let events = [e];
-    if (e.getCoalescedEvents) {
-      const coalesced = e.getCoalescedEvents();
-      if (coalesced.length > 0) events = coalesced;
-    }
-
-    for (const evt of events) {
-      const point = getPoint(evt);
-      pendingPoints.current.push({ from: { ...lastPoint.current }, to: point });
-      lastPoint.current = point;
-    }
-
-    // Batch render via requestAnimationFrame
-    if (!rafId.current) {
-      rafId.current = requestAnimationFrame(flushPoints);
-    }
-
-    if (!hasContentRef.current) {
-      hasContentRef.current = true;
-      setHasContent(true);
-    }
-  };
-
-  const stopDrawing = (e) => {
-    if (!isDrawingRef.current) return;
-    // Flush any remaining points
-    if (pendingPoints.current.length > 0) {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-      flushPoints();
-    }
-    isDrawingRef.current = false;
-    lastPoint.current = null;
-  };
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
@@ -175,14 +157,13 @@ export default function ScratchPad() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid(ctx, rect.width, height);
-    hasContentRef.current = false;
+    stateRef.current.hasContent = false;
     setHasContent(false);
   };
 
   const toggleExpand = () => {
     const canvas = canvasRef.current;
     const imageData = canvas.toDataURL();
-
     setIsExpanded((prev) => !prev);
 
     setTimeout(() => {
@@ -226,11 +207,6 @@ export default function ScratchPad() {
         <canvas
           ref={canvasRef}
           className="touch-none cursor-crosshair"
-          onPointerDown={startDrawing}
-          onPointerMove={draw}
-          onPointerUp={stopDrawing}
-          onPointerLeave={stopDrawing}
-          onPointerCancel={stopDrawing}
         />
       </div>
     </div>
