@@ -12,36 +12,20 @@ export default function ScratchPad() {
     hasContent: false,
     lastX: 0,
     lastY: 0,
-    canvasRect: null,
+    rectLeft: 0,
+    rectTop: 0,
   });
 
   const COLLAPSED_HEIGHT = 200;
   const EXPANDED_HEIGHT = 400;
-
-  const drawGrid = useCallback((ctx, width, height) => {
-    ctx.save();
-    ctx.strokeStyle = '#e5e7eb';
-    ctx.lineWidth = 0.5;
-    const gridSize = 20;
-    ctx.beginPath();
-    for (let x = gridSize; x < width; x += gridSize) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, height);
-    }
-    for (let y = gridSize; y < height; y += gridSize) {
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-    }
-    ctx.stroke();
-    ctx.restore();
-  }, []);
 
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
 
-    const dpr = window.devicePixelRatio || 1;
+    // Cap DPR at 2 for performance
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = container.getBoundingClientRect();
     const height = isExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT;
 
@@ -50,20 +34,25 @@ export default function ScratchPad() {
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${height}px`;
 
-    const ctx = canvas.getContext('2d');
+    // desynchronized: true = low-latency canvas (bypasses compositor)
+    const ctx = canvas.getContext('2d', {
+      desynchronized: true,
+      willReadFrequently: false,
+    });
     ctx.scale(dpr, dpr);
-    drawGrid(ctx, rect.width, height);
 
-    // Cache rect for fast coordinate calculation
-    stateRef.current.canvasRect = canvas.getBoundingClientRect();
-  }, [isExpanded, drawGrid]);
+    // Pre-set drawing style (never changes)
+    ctx.strokeStyle = '#374151';
+    ctx.fillStyle = '#374151';
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = 2;
+  }, [isExpanded]);
 
-  // Attach native pointer events directly (bypasses React synthetic events)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
     const s = stateRef.current;
 
     const onPointerDown = (e) => {
@@ -71,16 +60,17 @@ export default function ScratchPad() {
       e.preventDefault();
       canvas.setPointerCapture(e.pointerId);
 
-      s.canvasRect = canvas.getBoundingClientRect();
+      const rect = canvas.getBoundingClientRect();
+      s.rectLeft = rect.left;
+      s.rectTop = rect.top;
       s.isDrawing = true;
-      s.lastX = e.clientX - s.canvasRect.left;
-      s.lastY = e.clientY - s.canvasRect.top;
+      s.lastX = e.clientX - s.rectLeft;
+      s.lastY = e.clientY - s.rectTop;
 
       // Draw initial dot
-      const pressure = e.pressure || 0.5;
+      const ctx = canvas.getContext('2d');
       ctx.beginPath();
-      ctx.arc(s.lastX, s.lastY, Math.max(0.8, pressure * 2), 0, Math.PI * 2);
-      ctx.fillStyle = '#374151';
+      ctx.arc(s.lastX, s.lastY, 1, 0, Math.PI * 2);
       ctx.fill();
     };
 
@@ -88,30 +78,30 @@ export default function ScratchPad() {
       if (!s.isDrawing || e.pointerType === 'touch') return;
       e.preventDefault();
 
-      const rect = s.canvasRect;
-      ctx.strokeStyle = '#374151';
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
+      const ctx = canvas.getContext('2d');
 
-      // Use coalesced events for smoother Apple Pencil strokes
-      const events = e.getCoalescedEvents ? e.getCoalescedEvents() : null;
-      const points = (events && events.length > 0) ? events : [e];
+      // Coalesced events for Apple Pencil smoothness
+      let events;
+      if (e.getCoalescedEvents) {
+        const coalesced = e.getCoalescedEvents();
+        events = coalesced.length > 0 ? coalesced : [e];
+      } else {
+        events = [e];
+      }
 
-      for (let i = 0; i < points.length; i++) {
-        const pt = points[i];
-        const x = pt.clientX - rect.left;
-        const y = pt.clientY - rect.top;
-        const pressure = pt.pressure || 0.5;
+      // Single path for all coalesced points → one stroke() call
+      ctx.beginPath();
+      ctx.moveTo(s.lastX, s.lastY);
 
-        ctx.beginPath();
-        ctx.moveTo(s.lastX, s.lastY);
+      for (let i = 0; i < events.length; i++) {
+        const x = events[i].clientX - s.rectLeft;
+        const y = events[i].clientY - s.rectTop;
         ctx.lineTo(x, y);
-        ctx.lineWidth = Math.max(1.2, pressure * 3.5);
-        ctx.stroke();
-
         s.lastX = x;
         s.lastY = y;
       }
+
+      ctx.stroke();
 
       if (!s.hasContent) {
         s.hasContent = true;
@@ -119,8 +109,7 @@ export default function ScratchPad() {
       }
     };
 
-    const onPointerUp = (e) => {
-      if (!s.isDrawing) return;
+    const onPointerUp = () => {
       s.isDrawing = false;
     };
 
@@ -148,15 +137,9 @@ export default function ScratchPad() {
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const rect = container.getBoundingClientRect();
-    const height = isExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawGrid(ctx, rect.width, height);
     stateRef.current.hasContent = false;
     setHasContent(false);
   };
@@ -170,11 +153,18 @@ export default function ScratchPad() {
       const img = new Image();
       img.onload = () => {
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
+        ctx.drawImage(img, 0, 0, canvas.width / Math.min(window.devicePixelRatio || 1, 2), canvas.height / Math.min(window.devicePixelRatio || 1, 2));
       };
       img.src = imageData;
     }, 50);
   };
+
+  // CSS grid background (not drawn on canvas — zero performance cost)
+  const gridBg = `repeating-linear-gradient(
+    0deg, transparent, transparent 19px, #f0f0f0 19px, #f0f0f0 20px
+  ), repeating-linear-gradient(
+    90deg, transparent, transparent 19px, #f0f0f0 19px, #f0f0f0 20px
+  )`;
 
   return (
     <div className="mt-4">
@@ -201,12 +191,17 @@ export default function ScratchPad() {
       </div>
       <div
         ref={containerRef}
-        className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm"
-        style={{ height: isExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT }}
+        className="rounded-xl border border-gray-200 overflow-hidden shadow-sm"
+        style={{
+          height: isExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT,
+          background: gridBg,
+          backgroundColor: 'white',
+        }}
       >
         <canvas
           ref={canvasRef}
           className="touch-none cursor-crosshair"
+          style={{ display: 'block' }}
         />
       </div>
     </div>
