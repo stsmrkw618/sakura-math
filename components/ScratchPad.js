@@ -4,6 +4,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 
 export default function ScratchPad() {
   const canvasRef = useRef(null);
+  const predictCanvasRef = useRef(null);
   const containerRef = useRef(null);
   const [hasContent, setHasContent] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -14,6 +15,8 @@ export default function ScratchPad() {
     lastY: 0,
     rectLeft: 0,
     rectTop: 0,
+    ctx: null,
+    predictCtx: null,
   });
 
   const COLLAPSED_HEIGHT = 200;
@@ -21,46 +24,64 @@ export default function ScratchPad() {
 
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
+    const predictCanvas = predictCanvasRef.current;
     const container = containerRef.current;
-    if (!canvas || !container) return;
+    if (!canvas || !predictCanvas || !container) return;
 
-    // Cap DPR at 2 for performance
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = container.getBoundingClientRect();
     const height = isExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT;
 
+    // Main canvas (committed strokes)
     canvas.width = rect.width * dpr;
     canvas.height = height * dpr;
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${height}px`;
 
-    // desynchronized: true = low-latency canvas (bypasses compositor)
     const ctx = canvas.getContext('2d', {
       desynchronized: true,
       willReadFrequently: false,
     });
     ctx.scale(dpr, dpr);
-
-    // Pre-set drawing style (never changes)
     ctx.strokeStyle = '#374151';
     ctx.fillStyle = '#374151';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineWidth = 2;
+
+    // Prediction canvas (temporary predicted strokes, cleared each frame)
+    predictCanvas.width = rect.width * dpr;
+    predictCanvas.height = height * dpr;
+    predictCanvas.style.width = `${rect.width}px`;
+    predictCanvas.style.height = `${height}px`;
+
+    const predictCtx = predictCanvas.getContext('2d', {
+      desynchronized: true,
+      willReadFrequently: false,
+    });
+    predictCtx.scale(dpr, dpr);
+    predictCtx.strokeStyle = '#374151';
+    predictCtx.lineCap = 'round';
+    predictCtx.lineJoin = 'round';
+    predictCtx.lineWidth = 2;
+
+    // Cache contexts
+    stateRef.current.ctx = ctx;
+    stateRef.current.predictCtx = predictCtx;
   }, [isExpanded]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const predictCanvas = predictCanvasRef.current;
+    if (!predictCanvas) return;
 
     const s = stateRef.current;
 
     const onPointerDown = (e) => {
       if (e.pointerType === 'touch') return;
       e.preventDefault();
-      canvas.setPointerCapture(e.pointerId);
+      predictCanvas.setPointerCapture(e.pointerId);
 
-      const rect = canvas.getBoundingClientRect();
+      const rect = predictCanvas.getBoundingClientRect();
       s.rectLeft = rect.left;
       s.rectTop = rect.top;
       s.isDrawing = true;
@@ -68,40 +89,47 @@ export default function ScratchPad() {
       s.lastY = e.clientY - s.rectTop;
 
       // Draw initial dot
-      const ctx = canvas.getContext('2d');
-      ctx.beginPath();
-      ctx.arc(s.lastX, s.lastY, 1, 0, Math.PI * 2);
-      ctx.fill();
+      s.ctx.beginPath();
+      s.ctx.arc(s.lastX, s.lastY, 1, 0, Math.PI * 2);
+      s.ctx.fill();
     };
 
     const onPointerMove = (e) => {
       if (!s.isDrawing || e.pointerType === 'touch') return;
       e.preventDefault();
 
-      const ctx = canvas.getContext('2d');
+      // --- Draw actual (coalesced) points on main canvas ---
+      const coalesced = e.getCoalescedEvents ? e.getCoalescedEvents() : null;
+      const events = (coalesced && coalesced.length > 0) ? coalesced : [e];
 
-      // Coalesced events for Apple Pencil smoothness
-      let events;
-      if (e.getCoalescedEvents) {
-        const coalesced = e.getCoalescedEvents();
-        events = coalesced.length > 0 ? coalesced : [e];
-      } else {
-        events = [e];
-      }
-
-      // Single path for all coalesced points → one stroke() call
-      ctx.beginPath();
-      ctx.moveTo(s.lastX, s.lastY);
+      s.ctx.beginPath();
+      s.ctx.moveTo(s.lastX, s.lastY);
 
       for (let i = 0; i < events.length; i++) {
-        const x = events[i].clientX - s.rectLeft;
-        const y = events[i].clientY - s.rectTop;
-        ctx.lineTo(x, y);
-        s.lastX = x;
-        s.lastY = y;
+        s.lastX = events[i].clientX - s.rectLeft;
+        s.lastY = events[i].clientY - s.rectTop;
+        s.ctx.lineTo(s.lastX, s.lastY);
       }
+      s.ctx.stroke();
 
-      ctx.stroke();
+      // --- Draw predicted points on prediction canvas ---
+      // Clear prediction layer, then draw predicted future path
+      s.predictCtx.clearRect(0, 0, predictCanvas.width, predictCanvas.height);
+
+      if (e.getPredictedEvents) {
+        const predicted = e.getPredictedEvents();
+        if (predicted.length > 0) {
+          s.predictCtx.beginPath();
+          s.predictCtx.moveTo(s.lastX, s.lastY);
+          for (let i = 0; i < predicted.length; i++) {
+            s.predictCtx.lineTo(
+              predicted[i].clientX - s.rectLeft,
+              predicted[i].clientY - s.rectTop
+            );
+          }
+          s.predictCtx.stroke();
+        }
+      }
 
       if (!s.hasContent) {
         s.hasContent = true;
@@ -110,21 +138,24 @@ export default function ScratchPad() {
     };
 
     const onPointerUp = () => {
+      if (!s.isDrawing) return;
       s.isDrawing = false;
+      // Clear prediction layer
+      s.predictCtx.clearRect(0, 0, predictCanvas.width, predictCanvas.height);
     };
 
-    canvas.addEventListener('pointerdown', onPointerDown);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerup', onPointerUp);
-    canvas.addEventListener('pointerleave', onPointerUp);
-    canvas.addEventListener('pointercancel', onPointerUp);
+    predictCanvas.addEventListener('pointerdown', onPointerDown);
+    predictCanvas.addEventListener('pointermove', onPointerMove);
+    predictCanvas.addEventListener('pointerup', onPointerUp);
+    predictCanvas.addEventListener('pointerleave', onPointerUp);
+    predictCanvas.addEventListener('pointercancel', onPointerUp);
 
     return () => {
-      canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerup', onPointerUp);
-      canvas.removeEventListener('pointerleave', onPointerUp);
-      canvas.removeEventListener('pointercancel', onPointerUp);
+      predictCanvas.removeEventListener('pointerdown', onPointerDown);
+      predictCanvas.removeEventListener('pointermove', onPointerMove);
+      predictCanvas.removeEventListener('pointerup', onPointerUp);
+      predictCanvas.removeEventListener('pointerleave', onPointerUp);
+      predictCanvas.removeEventListener('pointercancel', onPointerUp);
     };
   }, [isExpanded]);
 
@@ -137,9 +168,12 @@ export default function ScratchPad() {
 
   const clearCanvas = () => {
     const canvas = canvasRef.current;
+    const predictCanvas = predictCanvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stateRef.current.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (predictCanvas) {
+      stateRef.current.predictCtx.clearRect(0, 0, predictCanvas.width, predictCanvas.height);
+    }
     stateRef.current.hasContent = false;
     setHasContent(false);
   };
@@ -152,14 +186,13 @@ export default function ScratchPad() {
     setTimeout(() => {
       const img = new Image();
       img.onload = () => {
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width / Math.min(window.devicePixelRatio || 1, 2), canvas.height / Math.min(window.devicePixelRatio || 1, 2));
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        stateRef.current.ctx.drawImage(img, 0, 0, canvas.width / dpr, canvas.height / dpr);
       };
       img.src = imageData;
     }, 50);
   };
 
-  // CSS grid background (not drawn on canvas — zero performance cost)
   const gridBg = `repeating-linear-gradient(
     0deg, transparent, transparent 19px, #f0f0f0 19px, #f0f0f0 20px
   ), repeating-linear-gradient(
@@ -191,17 +224,24 @@ export default function ScratchPad() {
       </div>
       <div
         ref={containerRef}
-        className="rounded-xl border border-gray-200 overflow-hidden shadow-sm"
+        className="rounded-xl border border-gray-200 overflow-hidden shadow-sm relative"
         style={{
           height: isExpanded ? EXPANDED_HEIGHT : COLLAPSED_HEIGHT,
           background: gridBg,
           backgroundColor: 'white',
+          willChange: 'transform',
         }}
       >
+        {/* Main canvas: committed strokes */}
         <canvas
           ref={canvasRef}
+          style={{ display: 'block', position: 'absolute', inset: 0 }}
+        />
+        {/* Prediction canvas: temporary predicted path (on top, receives events) */}
+        <canvas
+          ref={predictCanvasRef}
           className="touch-none cursor-crosshair"
-          style={{ display: 'block' }}
+          style={{ display: 'block', position: 'absolute', inset: 0 }}
         />
       </div>
     </div>
