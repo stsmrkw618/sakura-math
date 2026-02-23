@@ -5,7 +5,7 @@ import Link from 'next/link';
 import FlashCard from '../../components/FlashCard';
 import ProgressBar from '../../components/ProgressBar';
 import { getAllFlashcards, getCategoryInfo } from '../../lib/flashcards';
-import { getFlashcardsDue, getBoxForCard, getMasteredCount } from '../../lib/leitner';
+import { getFlashcardsWeighted, getBoxForCard, getMasteredCount } from '../../lib/leitner';
 import {
   loadProgress,
   saveProgress,
@@ -81,7 +81,6 @@ export default function FlashcardsPage() {
   const [comboText, setComboText] = useState(null);
   const [showBloomAnimation, setShowBloomAnimation] = useState(false);
   const [characterPopup, setCharacterPopup] = useState(null); // { character, line, combo, fadingOut }
-  const [allMastered, setAllMastered] = useState(false);
   const [progressRef, setProgressRef] = useState(null);
 
   useEffect(() => {
@@ -92,18 +91,8 @@ export default function FlashcardsPage() {
     setProgressRef(progress);
 
     const allCards = getAllFlashcards();
-    const due = getFlashcardsDue(allCards, progress.flashcards.boxes, progress.flashcards.sessionCount);
-
-    if (due.length === 0) {
-      // All mastered or no cards due
-      const mastered = getMasteredCount(progress.flashcards.boxes);
-      if (mastered >= allCards.length) {
-        setAllMastered(true);
-      }
-      setCards([]);
-    } else {
-      setCards(due);
-    }
+    const selected = getFlashcardsWeighted(allCards, progress.flashcards.boxes);
+    setCards(selected);
     setLoading(false);
   }, []);
 
@@ -203,27 +192,6 @@ export default function FlashcardsPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-purple-400 text-xl">🃏</div>
       </div>
-    );
-  }
-
-  if (cards.length === 0) {
-    return (
-      <main className="pt-6">
-        <div className="text-center py-16">
-          <p className="text-5xl mb-4">{allMastered ? '🎊' : '✨'}</p>
-          <p className="text-xl font-bold text-gray-700 font-kiwi mb-2">
-            {allMastered ? '全カードマスター！' : '今は復習するカードがないよ'}
-          </p>
-          <p className="text-sm text-gray-500">
-            {allMastered ? 'すべての暗記カードを覚えました！' : 'また次のセッションで挑戦しよう'}
-          </p>
-          <Link href="/">
-            <button className="mt-6 px-8 py-3 bg-purple-400 text-white rounded-2xl font-bold shadow-lg shadow-purple-200">
-              戻る
-            </button>
-          </Link>
-        </div>
-      </main>
     );
   }
 
