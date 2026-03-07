@@ -30,7 +30,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
 
       {/* Question */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 border border-gray-100 shadow-sm">
-        <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-wrap">
+        <p className="text-xl leading-relaxed text-gray-700 whitespace-pre-wrap">
           {problem.question}
         </p>
         <FigureDisplay figure={problem.figure} />
@@ -43,7 +43,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
       {!showAnswer ? (
         <button
           onClick={() => setShowAnswer(true)}
-          className="w-full mt-4 py-3.5 bg-white/80 backdrop-blur-sm border-2 border-dashed border-sakura-200 rounded-2xl text-sakura-500 font-bold text-base active:scale-[0.98] transition-transform"
+          className="w-full mt-4 py-3.5 bg-white/80 backdrop-blur-sm border-2 border-dashed border-sakura-200 rounded-2xl text-sakura-500 font-bold text-lg active:scale-[0.98] transition-transform"
         >
           答えを見る 👀
         </button>
@@ -51,8 +51,8 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
         <div className="mt-4 animate-slide-up">
           {/* Answer */}
           <div className="bg-gradient-to-br from-sakura-50 to-white rounded-2xl p-5 border border-sakura-100 shadow-sm">
-            <p className="text-base font-bold text-sakura-500 mb-2">答え</p>
-            <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-wrap">
+            <p className="text-lg font-bold text-sakura-500 mb-2">答え</p>
+            <p className="text-xl leading-relaxed text-gray-700 whitespace-pre-wrap">
               {problem.answer}
             </p>
           </div>
@@ -60,10 +60,10 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
           {/* Stumbling point */}
           {problem.stumblingPoint && (
             <div className="mt-3 bg-warm-yellow/10 rounded-xl p-4 border border-warm-yellow/20">
-              <p className="text-base font-bold text-warm-orange mb-1">
+              <p className="text-lg font-bold text-warm-orange mb-1">
                 💡 つまずきポイント
               </p>
-              <p className="text-base text-gray-600 leading-relaxed">
+              <p className="text-lg text-gray-600 leading-relaxed">
                 {problem.stumblingPoint}
               </p>
             </div>
@@ -72,7 +72,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
           {/* Self evaluation */}
           {!evaluated && (
             <div className="mt-5">
-              <p className="text-center text-base text-gray-500 mb-3">
+              <p className="text-center text-lg text-gray-500 mb-3">
                 どうだった？
               </p>
               <div className="grid grid-cols-3 gap-2">
@@ -81,7 +81,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
                   className="py-4 px-2 bg-white border-2 border-red-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-red-50"
                 >
                   <span className="text-3xl block mb-1">😢</span>
-                  <span className="text-sm text-red-500 font-medium block">
+                  <span className="text-base text-red-500 font-medium block">
                     わからなかった
                   </span>
                 </button>
@@ -90,7 +90,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
                   className="py-4 px-2 bg-white border-2 border-yellow-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-yellow-50"
                 >
                   <span className="text-3xl block mb-1">🤔</span>
-                  <span className="text-sm text-yellow-600 font-medium block">
+                  <span className="text-base text-yellow-600 font-medium block">
                     あやしい…
                   </span>
                 </button>
@@ -99,7 +99,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
                   className="py-4 px-2 bg-white border-2 border-sakura-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-pink-50"
                 >
                   <span className="text-3xl block mb-1">🌸</span>
-                  <span className="text-sm text-sakura-500 font-medium block">
+                  <span className="text-base text-sakura-500 font-medium block">
                     できた！
                   </span>
                 </button>
@@ -110,7 +110,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
           {/* Already answered indicator */}
           {alreadyAnswered && previousQuality !== undefined && (
             <div className="mt-4 text-center">
-              <span className="text-sm text-gray-400">
+              <span className="text-base text-gray-400">
                 回答済み: {previousQuality === 5 ? '🌸 できた' : previousQuality === 3 ? '🤔 あやしい' : '😢 わからなかった'}
               </span>
             </div>
@@ -119,7 +119,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
       )}
 
       {/* Source info */}
-      <p className="mt-3 text-xs text-gray-400 text-right">
+      <p className="mt-3 text-sm text-gray-400 text-right">
         {problem.source}
       </p>
     </div>

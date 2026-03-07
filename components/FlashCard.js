@@ -60,7 +60,7 @@ export default function FlashCard({ card, boxLevel, onCorrect, onIncorrect }) {
               <p className="text-2xl font-bold text-gray-700 font-kiwi text-center leading-relaxed whitespace-pre-line">
                 {card.front}
               </p>
-              <p className="text-sm text-gray-400 mt-6">タップでめくる 👆</p>
+              <p className="text-base text-gray-400 mt-6">タップでめくる 👆</p>
             </div>
           </div>
 
@@ -72,7 +72,7 @@ export default function FlashCard({ card, boxLevel, onCorrect, onIncorrect }) {
               </p>
               {card.hint && (
                 <div className="mt-4 px-4 py-2.5 bg-yellow-50 border border-yellow-200 rounded-xl w-full">
-                  <p className="text-sm text-yellow-700 text-center">
+                  <p className="text-base text-yellow-700 text-center">
                     💡 {card.hint}
                   </p>
                 </div>
@@ -87,13 +87,13 @@ export default function FlashCard({ card, boxLevel, onCorrect, onIncorrect }) {
         <div className="mt-4 grid grid-cols-2 gap-3 animate-fade-in">
           <button
             onClick={handleIncorrect}
-            className="py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold text-base active:scale-[0.97] transition-transform border border-gray-200"
+            className="py-4 bg-gray-100 text-gray-600 rounded-2xl font-bold text-lg active:scale-[0.97] transition-transform border border-gray-200"
           >
             もういちど 🔄
           </button>
           <button
             onClick={handleCorrect}
-            className="py-4 bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-purple-200 active:scale-[0.97] transition-transform"
+            className="py-4 bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-purple-200 active:scale-[0.97] transition-transform"
           >
             覚えてた！ 🌸
           </button>

@@ -221,14 +221,14 @@ export default function Home() {
         <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-base font-bold text-gray-700 font-kiwi">
+              <p className="text-lg font-bold text-gray-700 font-kiwi">
                 今日: ドリル <span className="text-sakura-500">{todayDrillCount}</span>問
               </p>
-              <p className="text-base font-bold text-gray-700 font-kiwi mt-0.5">
+              <p className="text-lg font-bold text-gray-700 font-kiwi mt-0.5">
                 暗記カード（覚えた）: <span className="text-purple-500">{flashcardLearned}</span>枚
               </p>
               {streak.currentStreak > 0 && (
-                <p className="text-sm text-warm-orange mt-1">
+                <p className="text-base text-warm-orange mt-1">
                   連続{streak.currentStreak}日がんばってるよ！🔥
                 </p>
               )}
@@ -290,10 +290,10 @@ export default function Home() {
 
         <Link href="/flashcards" className="block">
           <button
-            className="w-full py-3 bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-purple-100 active:scale-[0.98] transition-transform font-kiwi"
+            className="w-full py-3 bg-gradient-to-r from-purple-400 to-purple-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-purple-100 active:scale-[0.98] transition-transform font-kiwi"
           >
             暗記カード 🃏
-            <span className="ml-2 text-xs font-normal opacity-80">
+            <span className="ml-2 text-sm font-normal opacity-80">
               {flashcardMastered > 0
                 ? `${flashcardMastered}/${flashcardTotal}枚マスター`
                 : `${flashcardLearned}/${flashcardTotal}枚おぼえた`}
@@ -304,7 +304,7 @@ export default function Home() {
         {dueCountHL > 0 && (
           <Link href="/drill?mode=highlevel" className="block">
             <button
-              className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-base shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi"
+              className="w-full py-3 bg-gradient-to-r from-warm-orange to-amber-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-orange-100 active:scale-[0.98] transition-transform font-kiwi"
             >
               {dueHLIsDue ? (
                 <>ハイレベル 🔥</>
@@ -317,17 +317,17 @@ export default function Home() {
 
         <div className="grid grid-cols-3 gap-3">
           <Link href="/dashboard" className="block">
-            <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
+            <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-base active:scale-[0.98] transition-transform">
               📊 苦手
             </button>
           </Link>
           <Link href="/history" className="block">
-            <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
+            <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-base active:scale-[0.98] transition-transform">
               📖 履歴
             </button>
           </Link>
           <Link href="/problems" className="block">
-            <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
+            <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-base active:scale-[0.98] transition-transform">
               📋 一覧
             </button>
           </Link>
