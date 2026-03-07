@@ -40,7 +40,10 @@ export default function FigureDisplay({ figure }) {
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
             onClick={() => setExpanded(false)}
           >
-            <div className="relative w-[95vw] max-w-[600px] max-h-[85vh] p-2">
+            <div
+              className="relative w-[95vw] max-w-[600px] max-h-[85vh] p-2"
+              onClick={(e) => e.stopPropagation()}
+            >
               <img
                 src={`/${figure.path}`}
                 alt={figure.description}
@@ -48,7 +51,7 @@ export default function FigureDisplay({ figure }) {
               />
               <button
                 onClick={() => setExpanded(false)}
-                className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 text-lg leading-none"
+                className="absolute -top-1 -right-1 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 text-xl leading-none"
               >
                 ×
               </button>
