@@ -7,11 +7,11 @@ import ProgressBar from '../../components/ProgressBar';
 import { loadProgress, saveProgress, updateStreak, addBloom, recordReview } from '../../lib/storage';
 import { getAllProblems } from '../../lib/problems';
 import { getDueProblems, selectBatch } from '../../lib/spaced-repetition';
+import Confetti from '../../components/Confetti';
 
 export default function DrillPage() {
   const [loading, setLoading] = useState(true);
   const [problems, setProblems] = useState([]);
-  const [totalDue, setTotalDue] = useState(0);
   const [isPractice, setIsPractice] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [results, setResults] = useState({});
@@ -28,7 +28,6 @@ export default function DrillPage() {
     const progress = loadProgress();
     const allProblems = getAllProblems();
     const { problems: due, isDue } = getDueProblems(allProblems, progress.reviews, { mode: m });
-    setTotalDue(due.length);
     setIsPractice(!isDue);
 
     // バッチ選択（5〜10問、大問グループ単位でシャッフル）
@@ -108,7 +107,6 @@ export default function DrillPage() {
       .filter((p) => results[p.id] !== undefined)
       .map((p) => ({ problem: p, quality: results[p.id] }));
     const correctCount = resultEntries.filter((r) => r.quality >= 3).length;
-    const remaining = totalDue - problems.length;
 
     // Tag-based summary
     const tagResults = {};
@@ -122,6 +120,7 @@ export default function DrillPage() {
 
     return (
       <main className="pt-6 animate-fade-in">
+        <Confetti active={done} />
         <div className="text-center mb-6">
           <p className="text-5xl mb-3">
             {correctCount === resultEntries.length ? '🌟' : correctCount > 0 ? '🌸' : '💪'}
@@ -184,30 +183,9 @@ export default function DrillPage() {
           </div>
         </div>
 
-        {/* Remaining and navigation */}
-        {remaining > 0 && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm mb-4 text-center">
-            <p className="text-base text-gray-600">
-              残り <span className="font-bold text-sakura-500">{remaining}問</span> あります
-            </p>
-          </div>
-        )}
-
         <div className="space-y-3 mb-6">
-          {remaining > 0 && (
-            <button
-              onClick={() => window.location.reload()}
-              className="w-full py-3.5 bg-gradient-to-r from-sakura-400 to-sakura-500 text-white rounded-2xl font-bold shadow-lg shadow-sakura-200"
-            >
-              次の問題に挑戦 🌸
-            </button>
-          )}
           <Link href="/">
-            <button className={`w-full py-3.5 rounded-2xl font-bold ${
-              remaining > 0
-                ? 'bg-white/80 border border-sakura-100 text-gray-600'
-                : 'bg-gradient-to-r from-sakura-400 to-sakura-500 text-white shadow-lg shadow-sakura-200'
-            }`}>
+            <button className="w-full py-3.5 bg-gradient-to-r from-sakura-400 to-sakura-500 text-white rounded-2xl font-bold shadow-lg shadow-sakura-200">
               ホームに戻る
             </button>
           </Link>
