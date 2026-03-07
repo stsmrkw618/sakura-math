@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import TagBadge from './TagBadge';
 import FigureDisplay from './FigureDisplay';
-import ScratchPad from './ScratchPad';
+
 
 export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previousQuality }) {
   const [showAnswer, setShowAnswer] = useState(alreadyAnswered || false);
@@ -35,9 +35,6 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
         </p>
         <FigureDisplay figure={problem.figure} />
       </div>
-
-      {/* Scratch pad for calculations */}
-      <ScratchPad />
 
       {/* Answer section */}
       {!showAnswer ? (
