@@ -7,7 +7,7 @@ import PetalFall from '../components/PetalFall';
 import { loadProgress, saveProgress, syncFromSupabase } from '../lib/storage';
 import { getAllProblems } from '../lib/problems';
 import { getDueProblems, calculateNextReview } from '../lib/spaced-repetition';
-import { getAllFlashcards } from '../lib/flashcards';
+import { getAllFlashcards, getHiddenFlashcards, getFlashcardCategories, addFlashcard, hideFlashcard, unhideFlashcard, isCustomCard, getNextCustomId } from '../lib/flashcards';
 import { getMasteredCount, getLearnedCount } from '../lib/leitner';
 
 export default function Home() {
@@ -26,7 +26,15 @@ export default function Home() {
   const [importJson, setImportJson] = useState('');
   const [importStatus, setImportStatus] = useState(null);
   const [exportData, setExportData] = useState('');
-  const [adminTab, setAdminTab] = useState('import');
+  const [adminTab, setAdminTab] = useState('flashcards');
+  const [fcList, setFcList] = useState([]);
+  const [fcNewFront, setFcNewFront] = useState('');
+  const [fcNewBack, setFcNewBack] = useState('');
+  const [fcNewCategory, setFcNewCategory] = useState('unit');
+  const [fcNewHint, setFcNewHint] = useState('');
+  const [fcShowAdd, setFcShowAdd] = useState(false);
+  const [fcHiddenList, setFcHiddenList] = useState([]);
+  const [fcShowHidden, setFcShowHidden] = useState(false);
 
   useEffect(() => {
     const p = loadProgress();
@@ -336,6 +344,8 @@ export default function Home() {
             if (pw === '0618') {
               setShowAdminModal(true);
               setImportStatus(null);
+              setFcList(getAllFlashcards());
+              setFcHiddenList(getHiddenFlashcards());
             }
           }}
           className="mt-3 text-gray-300 text-[10px]"
@@ -366,6 +376,7 @@ export default function Home() {
             {/* Tabs */}
             <div className="flex border-b border-gray-100">
               {[
+                { key: 'flashcards', label: '暗記カード' },
                 { key: 'import', label: 'インポート' },
                 { key: 'export', label: 'エクスポート' },
                 { key: 'reset', label: 'リセット' },
@@ -394,6 +405,138 @@ export default function Home() {
                     : 'bg-red-50 text-red-600'
                 }`}>
                   {importStatus.message}
+                </div>
+              )}
+
+              {adminTab === 'flashcards' && (
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs text-gray-500">{fcList.length}枚</p>
+                    <button
+                      onClick={() => setFcShowAdd(!fcShowAdd)}
+                      className="px-3 py-1.5 bg-purple-500 text-white rounded-lg text-xs font-medium"
+                    >
+                      {fcShowAdd ? '閉じる' : '+ 追加'}
+                    </button>
+                  </div>
+
+                  {fcShowAdd && (
+                    <div className="mb-4 p-3 bg-purple-50 rounded-xl border border-purple-100 space-y-2">
+                      <input
+                        value={fcNewFront}
+                        onChange={e => setFcNewFront(e.target.value)}
+                        placeholder="おもて面（問題）"
+                        className="w-full p-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-purple-300"
+                      />
+                      <input
+                        value={fcNewBack}
+                        onChange={e => setFcNewBack(e.target.value)}
+                        placeholder="うら面（答え）"
+                        className="w-full p-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-purple-300"
+                      />
+                      <select
+                        value={fcNewCategory}
+                        onChange={e => setFcNewCategory(e.target.value)}
+                        className="w-full p-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-purple-300"
+                      >
+                        {getFlashcardCategories().map(cat => (
+                          <option key={cat.id} value={cat.id}>{cat.emoji} {cat.name}</option>
+                        ))}
+                      </select>
+                      <input
+                        value={fcNewHint}
+                        onChange={e => setFcNewHint(e.target.value)}
+                        placeholder="ヒント（任意）"
+                        className="w-full p-2 text-sm bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-purple-300"
+                      />
+                      <button
+                        onClick={() => {
+                          if (!fcNewFront.trim() || !fcNewBack.trim()) return;
+                          const newCard = {
+                            id: getNextCustomId(),
+                            front: fcNewFront.trim(),
+                            back: fcNewBack.trim(),
+                            category: fcNewCategory,
+                            hint: fcNewHint.trim() || undefined,
+                          };
+                          addFlashcard(newCard);
+                          setFcList(getAllFlashcards());
+                          setFlashcardTotal(getAllFlashcards().length);
+                          setFcNewFront('');
+                          setFcNewBack('');
+                          setFcNewHint('');
+                          setFcShowAdd(false);
+                          setImportStatus({ type: 'success', message: `「${newCard.front}」を追加しました` });
+                        }}
+                        disabled={!fcNewFront.trim() || !fcNewBack.trim()}
+                        className="w-full py-2 bg-purple-500 text-white rounded-lg text-sm font-medium disabled:opacity-40"
+                      >
+                        追加
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="space-y-2 max-h-[35vh] overflow-y-auto">
+                    {fcList.map(card => (
+                      <div key={card.id} className="flex items-start gap-2 p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-gray-400 mb-0.5">{card.id}{isCustomCard(card.id) ? ' (追加)' : ''}</p>
+                          <p className="text-sm font-medium text-gray-700 truncate">{card.front}</p>
+                          <p className="text-xs text-gray-500 truncate">{card.back}</p>
+                        </div>
+                        <button
+                          onClick={() => {
+                            hideFlashcard(card.id);
+                            const updated = getAllFlashcards();
+                            setFcList(updated);
+                            setFcHiddenList(getHiddenFlashcards());
+                            setFlashcardTotal(updated.length);
+                            setImportStatus({ type: 'success', message: `「${card.front}」を非表示にしました` });
+                          }}
+                          className="shrink-0 px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded-lg border border-gray-200"
+                        >
+                          非表示
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {fcHiddenList.length > 0 && (
+                    <div className="mt-4">
+                      <button
+                        onClick={() => setFcShowHidden(!fcShowHidden)}
+                        className="text-xs text-gray-400 underline"
+                      >
+                        非表示のカード ({fcHiddenList.length}枚) {fcShowHidden ? '▲' : '▼'}
+                      </button>
+                      {fcShowHidden && (
+                        <div className="mt-2 space-y-2">
+                          {fcHiddenList.map(card => (
+                            <div key={card.id} className="flex items-start gap-2 p-2.5 bg-gray-50/50 rounded-xl border border-dashed border-gray-200 opacity-70">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs text-gray-400 mb-0.5">{card.id}</p>
+                                <p className="text-sm text-gray-500 truncate">{card.front}</p>
+                                <p className="text-xs text-gray-400 truncate">{card.back}</p>
+                              </div>
+                              <button
+                                onClick={() => {
+                                  unhideFlashcard(card.id);
+                                  const updated = getAllFlashcards();
+                                  setFcList(updated);
+                                  setFcHiddenList(getHiddenFlashcards());
+                                  setFlashcardTotal(updated.length);
+                                  setImportStatus({ type: 'success', message: `「${card.front}」を復活させました` });
+                                }}
+                                className="shrink-0 px-2 py-1 text-xs text-purple-500 bg-purple-50 rounded-lg border border-purple-100"
+                              >
+                                復活
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
