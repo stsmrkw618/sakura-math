@@ -315,15 +315,20 @@ export default function Home() {
           </Link>
         )}
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <Link href="/dashboard" className="block">
             <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
-              📊 苦手チェック
+              📊 苦手
+            </button>
+          </Link>
+          <Link href="/history" className="block">
+            <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
+              📖 履歴
             </button>
           </Link>
           <Link href="/problems" className="block">
             <button className="w-full py-3 bg-white/80 backdrop-blur-sm border border-sakura-100 rounded-xl text-gray-600 font-medium text-sm active:scale-[0.98] transition-transform">
-              📋 問題一覧
+              📋 一覧
             </button>
           </Link>
         </div>
