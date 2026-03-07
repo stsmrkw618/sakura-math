@@ -38,11 +38,13 @@ export default function FigureDisplay({ figure }) {
         {expanded && (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-            onClick={() => setExpanded(false)}
+            onClick={(e) => { e.stopPropagation(); setExpanded(false); }}
+            onTouchEnd={(e) => { e.stopPropagation(); }}
           >
             <div
               className="relative w-[95vw] max-w-[600px] max-h-[85vh] p-2"
               onClick={(e) => e.stopPropagation()}
+              onTouchEnd={(e) => e.stopPropagation()}
             >
               <img
                 src={`/${figure.path}`}
@@ -50,8 +52,8 @@ export default function FigureDisplay({ figure }) {
                 className="w-full h-auto rounded-xl"
               />
               <button
-                onClick={() => setExpanded(false)}
-                className="absolute -top-1 -right-1 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 text-xl leading-none"
+                onClick={(e) => { e.stopPropagation(); setExpanded(false); }}
+                className="absolute -top-1 -right-1 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 text-2xl leading-none"
               >
                 ×
               </button>
