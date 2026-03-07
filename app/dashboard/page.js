@@ -91,7 +91,7 @@ export default function DashboardPage() {
     <main className="pt-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
-        <Link href="/" className="text-gray-400 text-sm">
+        <Link href="/" className="text-gray-400 text-base">
           ← 戻る
         </Link>
         <h1 className="text-lg font-bold text-gray-700 font-kiwi">
@@ -105,26 +105,26 @@ export default function DashboardPage() {
         <div className="grid grid-cols-3 text-center divide-x divide-gray-100">
           <div>
             <p className="text-2xl font-bold text-sakura-500 font-kiwi">{summary.total}</p>
-            <p className="text-xs text-gray-500">登録数</p>
+            <p className="text-sm text-gray-500">登録数</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-600 font-kiwi">{summary.totalAnswers}</p>
-            <p className="text-xs text-gray-500">回答数</p>
+            <p className="text-sm text-gray-500">回答数</p>
           </div>
           <div>
             <p className={`text-2xl font-bold font-kiwi ${getCorrectRateColor(summary.overallRate)}`}>
               {summary.overallRate}%
             </p>
-            <p className="text-xs text-gray-500">正答率</p>
+            <p className="text-sm text-gray-500">正答率</p>
           </div>
         </div>
       </div>
 
       {/* Tag Chart */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm mb-4">
-        <p className="text-sm font-bold text-gray-600 mb-3">分野別正答率</p>
+        <p className="text-base font-bold text-gray-600 mb-3">分野別正答率</p>
         {tagStats.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-4">
+          <p className="text-base text-gray-400 text-center py-4">
             まだデータがありません
           </p>
         ) : (
@@ -133,8 +133,8 @@ export default function DashboardPage() {
               <div key={tag}>
                 <div className="flex items-center justify-between mb-1">
                   <TagBadge tag={tag} />
-                  <span className={`text-sm font-bold ${getCorrectRateColor(rate)}`}>
-                    {rate}% <span className="text-xs font-normal text-gray-400">({correct}/{total})</span>
+                  <span className={`text-base font-bold ${getCorrectRateColor(rate)}`}>
+                    {rate}% <span className="text-sm font-normal text-gray-400">({correct}/{total})</span>
                   </span>
                 </div>
                 <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
@@ -157,11 +157,11 @@ export default function DashboardPage() {
 
       {/* Stumbling Points */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-sakura-100 shadow-sm mb-6">
-        <p className="text-sm font-bold text-gray-600 mb-3">
+        <p className="text-base font-bold text-gray-600 mb-3">
           つまずきポイント
         </p>
         {weakPoints.length === 0 ? (
-          <p className="text-sm text-gray-400 text-center py-4">
+          <p className="text-base text-gray-400 text-center py-4">
             苦手な分野はまだありません
           </p>
         ) : (
@@ -176,13 +176,13 @@ export default function DashboardPage() {
                     p.rate !== null ? getCorrectRateBg(p.rate) : 'bg-gray-50'
                   } border-gray-100 active:scale-[0.99]`}
                 >
-                  <p className={`text-xs text-gray-500 mb-1 ${isExpanded ? '' : 'line-clamp-1'}`}>
+                  <p className={`text-sm text-gray-500 mb-1 ${isExpanded ? '' : 'line-clamp-1'}`}>
                     {p.question}
                   </p>
                   {isExpanded && p.figure && (
                     <FigureDisplay figure={p.figure} />
                   )}
-                  <p className="text-sm text-gray-700">
+                  <p className="text-base text-gray-700">
                     💡 {p.stumblingPoint}
                   </p>
                   <div className="flex items-center gap-1.5 mt-2">

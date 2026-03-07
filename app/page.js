@@ -247,7 +247,7 @@ export default function Home() {
               <p className="text-lg font-bold text-sakura-500 font-kiwi">
                 {sakura.currentTreeBlooms}個 / {threshold}個
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-sm text-gray-400 mt-0.5">
                 満開まであと{remaining}個！
               </p>
             </div>
@@ -263,7 +263,7 @@ export default function Home() {
           {/* Past full bloom trees */}
           {sakura.fullBloomCount > 0 && (
             <div className="mt-3 pt-3 border-t border-pink-100">
-              <p className="text-xs text-gray-400 mb-1.5">満開にしたさくら</p>
+              <p className="text-sm text-gray-400 mb-1.5">満開にしたさくら</p>
               <div className="flex gap-1 flex-wrap">
                 {Array.from({ length: sakura.fullBloomCount }).map((_, i) => (
                   <span key={i} className="text-lg" title={`${i + 1}本目`}>🌸</span>
@@ -330,7 +330,7 @@ export default function Home() {
       </div>
 
       {/* Total stats footer */}
-      <div className="mt-6 text-center text-xs text-gray-400">
+      <div className="mt-6 text-center text-sm text-gray-400">
         <p>
           総さくら数: {sakura.totalBlooms}個
           {sakura.fullBloomCount > 0 && ` ・ 満開${sakura.fullBloomCount}回`}

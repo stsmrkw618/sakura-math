@@ -7,7 +7,7 @@ export default function TagBadge({ tag }) {
 
   return (
     <span
-      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium border ${color.bg} ${color.text} ${color.border}`}
+      className={`inline-block px-3 py-1 rounded-full text-sm font-medium border ${color.bg} ${color.text} ${color.border}`}
     >
       {tag}
     </span>

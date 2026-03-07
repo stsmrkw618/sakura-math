@@ -22,7 +22,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
           <TagBadge key={tag} tag={tag} />
         ))}
         {problem.correctRate && (
-          <span className="text-xs text-gray-400 ml-auto">
+          <span className="text-sm text-gray-400 ml-auto">
             正答率 {problem.correctRate}%
           </span>
         )}
@@ -30,7 +30,7 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
 
       {/* Question */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-5 border border-gray-100 shadow-sm">
-        <p className="text-base leading-relaxed text-gray-700 whitespace-pre-wrap">
+        <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-wrap">
           {problem.question}
         </p>
         <FigureDisplay figure={problem.figure} />
@@ -51,8 +51,8 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
         <div className="mt-4 animate-slide-up">
           {/* Answer */}
           <div className="bg-gradient-to-br from-sakura-50 to-white rounded-2xl p-5 border border-sakura-100 shadow-sm">
-            <p className="text-sm font-bold text-sakura-500 mb-2">答え</p>
-            <p className="text-base leading-relaxed text-gray-700 whitespace-pre-wrap">
+            <p className="text-base font-bold text-sakura-500 mb-2">答え</p>
+            <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-wrap">
               {problem.answer}
             </p>
           </div>
@@ -60,10 +60,10 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
           {/* Stumbling point */}
           {problem.stumblingPoint && (
             <div className="mt-3 bg-warm-yellow/10 rounded-xl p-4 border border-warm-yellow/20">
-              <p className="text-sm font-bold text-warm-orange mb-1">
+              <p className="text-base font-bold text-warm-orange mb-1">
                 💡 つまずきポイント
               </p>
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-base text-gray-600 leading-relaxed">
                 {problem.stumblingPoint}
               </p>
             </div>
@@ -72,34 +72,34 @@ export default function DrillCard({ problem, onEvaluate, alreadyAnswered, previo
           {/* Self evaluation */}
           {!evaluated && (
             <div className="mt-5">
-              <p className="text-center text-sm text-gray-500 mb-3">
+              <p className="text-center text-base text-gray-500 mb-3">
                 どうだった？
               </p>
               <div className="grid grid-cols-3 gap-2">
                 <button
                   onClick={() => handleEvaluate(1)}
-                  className="py-3 px-2 bg-white border-2 border-red-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-red-50"
+                  className="py-4 px-2 bg-white border-2 border-red-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-red-50"
                 >
-                  <span className="text-2xl block mb-1">😢</span>
-                  <span className="text-xs text-red-500 font-medium block">
+                  <span className="text-3xl block mb-1">😢</span>
+                  <span className="text-sm text-red-500 font-medium block">
                     わからなかった
                   </span>
                 </button>
                 <button
                   onClick={() => handleEvaluate(3)}
-                  className="py-3 px-2 bg-white border-2 border-yellow-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-yellow-50"
+                  className="py-4 px-2 bg-white border-2 border-yellow-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-yellow-50"
                 >
-                  <span className="text-2xl block mb-1">🤔</span>
-                  <span className="text-xs text-yellow-600 font-medium block">
+                  <span className="text-3xl block mb-1">🤔</span>
+                  <span className="text-sm text-yellow-600 font-medium block">
                     あやしい…
                   </span>
                 </button>
                 <button
                   onClick={() => handleEvaluate(5)}
-                  className="py-3 px-2 bg-white border-2 border-sakura-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-pink-50"
+                  className="py-4 px-2 bg-white border-2 border-sakura-200 rounded-xl text-center active:scale-[0.95] transition-transform hover:bg-pink-50"
                 >
-                  <span className="text-2xl block mb-1">🌸</span>
-                  <span className="text-xs text-sakura-500 font-medium block">
+                  <span className="text-3xl block mb-1">🌸</span>
+                  <span className="text-sm text-sakura-500 font-medium block">
                     できた！
                   </span>
                 </button>

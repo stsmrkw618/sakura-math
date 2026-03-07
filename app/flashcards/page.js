@@ -228,15 +228,15 @@ export default function FlashcardsPage() {
           <div className="grid grid-cols-3 text-center divide-x divide-gray-100">
             <div>
               <p className="text-2xl font-bold text-purple-500 font-kiwi">{results.length}</p>
-              <p className="text-xs text-gray-500">チャレンジ</p>
+              <p className="text-sm text-gray-500">チャレンジ</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-emerald-500 font-kiwi">{correctCount}</p>
-              <p className="text-xs text-gray-500">覚えてた</p>
+              <p className="text-sm text-gray-500">覚えてた</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-warm-orange font-kiwi">{bestCombo}</p>
-              <p className="text-xs text-gray-500">ベストコンボ🔥</p>
+              <p className="text-sm text-gray-500">ベストコンボ🔥</p>
             </div>
           </div>
         </div>
@@ -252,14 +252,14 @@ export default function FlashcardsPage() {
 
         {/* Category breakdown */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-100 shadow-sm mb-4">
-          <p className="text-sm font-bold text-gray-600 mb-3">カテゴリ別</p>
+          <p className="text-base font-bold text-gray-600 mb-3">カテゴリ別</p>
           <div className="space-y-2">
             {Object.entries(catResults).map(([catId, data]) => {
               const cat = getCategoryInfo(catId);
               return (
                 <div key={catId} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">{cat.emoji} {cat.name}</span>
-                  <span className={`text-sm font-bold ${
+                  <span className="text-base text-gray-600">{cat.emoji} {cat.name}</span>
+                  <span className={`text-base font-bold ${
                     data.correct === data.total ? 'text-emerald-500' :
                     data.correct > 0 ? 'text-yellow-500' : 'text-red-400'
                   }`}>
@@ -273,7 +273,7 @@ export default function FlashcardsPage() {
 
         {/* Mastered count */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-purple-100 shadow-sm mb-4 text-center">
-          <p className="text-sm text-gray-500">マスターしたカード</p>
+          <p className="text-base text-gray-500">マスターしたカード</p>
           <p className="text-lg font-bold text-purple-500 font-kiwi">{mastered} / {allCards.length}</p>
         </div>
 
@@ -302,14 +302,14 @@ export default function FlashcardsPage() {
     <main className="pt-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <Link href="/" className="text-gray-400 text-sm">
+        <Link href="/" className="text-gray-400 text-base">
           ← 戻る
         </Link>
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-700 border border-purple-200">
+          <span className="px-2.5 py-0.5 rounded-full text-sm font-bold bg-purple-100 text-purple-700 border border-purple-200">
             暗記カード🃏
           </span>
-          <span className="text-sm text-gray-500 font-medium">
+          <span className="text-base text-gray-500 font-medium">
             {currentIndex + 1} / {cards.length}
           </span>
         </div>
@@ -327,7 +327,7 @@ export default function FlashcardsPage() {
             🔥 {combo}コンボ
           </span>
           {comboText && (
-            <span className="ml-2 text-sm font-bold text-purple-500">
+            <span className="ml-2 text-base font-bold text-purple-500">
               {comboText}
             </span>
           )}

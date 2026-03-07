@@ -58,7 +58,7 @@ export default function ProblemsPage() {
     <main className="pt-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
-        <Link href="/" className="text-gray-400 text-sm">
+        <Link href="/" className="text-gray-400 text-base">
           ← 戻る
         </Link>
         <h1 className="text-lg font-bold text-gray-700 font-kiwi">
@@ -71,7 +71,7 @@ export default function ProblemsPage() {
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => setSelectedTag(null)}
-          className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+          className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
             selectedTag === null
               ? 'bg-sakura-400 text-white border-sakura-400'
               : 'bg-white/70 text-gray-500 border-gray-200'
@@ -86,7 +86,7 @@ export default function ProblemsPage() {
             <button
               key={tag.id}
               onClick={() => setSelectedTag(selectedTag === tag.name ? null : tag.name)}
-              className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+              className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
                 selectedTag === tag.name
                   ? 'bg-sakura-400 text-white border-sakura-400'
                   : 'bg-white/70 text-gray-500 border-gray-200'
@@ -99,7 +99,7 @@ export default function ProblemsPage() {
       </div>
 
       {/* Problem count */}
-      <p className="text-xs text-gray-400 mb-3">
+      <p className="text-sm text-gray-400 mb-3">
         {filtered.length}問 表示中
       </p>
 
@@ -128,7 +128,7 @@ export default function ProblemsPage() {
               >
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
-                    <p className={`text-sm text-gray-700 leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}>
+                    <p className={`text-base text-gray-700 leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}>
                       {problem.question}
                     </p>
                     <div className="flex items-center gap-1.5 mt-2 flex-wrap">
@@ -136,7 +136,7 @@ export default function ProblemsPage() {
                         <TagBadge key={t} tag={t} />
                       ))}
                       {due && (
-                        <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-sakura-100 text-sakura-600 border border-sakura-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-sm font-medium bg-sakura-100 text-sakura-600 border border-sakura-200">
                           復習
                         </span>
                       )}
@@ -160,8 +160,8 @@ export default function ProblemsPage() {
                 <div className="px-4 pb-4 border-t border-gray-100 pt-3 animate-fade-in">
                   {/* Source and test rate */}
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-xs text-gray-400">{problem.source}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-sm text-gray-400">{problem.source}</p>
+                    <p className="text-sm text-gray-400">
                       テスト正答率: {problem.correctRate}%
                     </p>
                   </div>
@@ -176,7 +176,7 @@ export default function ProblemsPage() {
                         e.stopPropagation();
                         setShowAnswerId(problem.id);
                       }}
-                      className="w-full py-2.5 bg-white border-2 border-dashed border-sakura-200 rounded-xl text-sakura-500 font-bold text-sm active:scale-[0.98] transition-transform"
+                      className="w-full py-2.5 bg-white border-2 border-dashed border-sakura-200 rounded-xl text-sakura-500 font-bold text-base active:scale-[0.98] transition-transform"
                     >
                       解説を見る
                     </button>
@@ -184,8 +184,8 @@ export default function ProblemsPage() {
                     <div className="animate-fade-in">
                       {/* Answer */}
                       <div className="bg-emerald-50 rounded-xl p-3 mb-3">
-                        <p className="text-xs font-bold text-emerald-700 mb-1">答え</p>
-                        <p className="text-sm text-gray-700 whitespace-pre-line">
+                        <p className="text-sm font-bold text-emerald-700 mb-1">答え</p>
+                        <p className="text-base text-gray-700 whitespace-pre-line">
                           {problem.answer}
                         </p>
                       </div>
@@ -193,10 +193,10 @@ export default function ProblemsPage() {
                       {/* Stumbling Point */}
                       {problem.stumblingPoint && (
                         <div className="bg-yellow-50 rounded-xl p-3 mb-3">
-                          <p className="text-xs font-bold text-yellow-700 mb-1">
+                          <p className="text-sm font-bold text-yellow-700 mb-1">
                             つまずきポイント
                           </p>
-                          <p className="text-sm text-gray-700">
+                          <p className="text-base text-gray-700">
                             💡 {problem.stumblingPoint}
                           </p>
                         </div>
@@ -205,7 +205,7 @@ export default function ProblemsPage() {
                       {/* Review History */}
                       {history.length > 0 && (
                         <div className="bg-gray-50 rounded-xl p-3">
-                          <p className="text-xs font-bold text-gray-500 mb-2">
+                          <p className="text-sm font-bold text-gray-500 mb-2">
                             復習履歴 ({history.length}回)
                           </p>
                           <div className="flex flex-wrap gap-1.5">
@@ -219,7 +219,7 @@ export default function ProblemsPage() {
                               </span>
                             ))}
                           </div>
-                          <p className="text-xs text-gray-400 mt-2">
+                          <p className="text-sm text-gray-400 mt-2">
                             最後の復習: {new Date(history[history.length - 1].date).toLocaleDateString('ja-JP')}
                           </p>
                         </div>
